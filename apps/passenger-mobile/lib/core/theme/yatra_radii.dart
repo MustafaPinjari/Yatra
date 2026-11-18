@@ -25,3 +25,4 @@ class YatraRadii {
   static const BorderRadius radiusIcon = BorderRadius.all(Radius.circular(iconContainer));
   static const BorderRadius radiusModal = BorderRadius.vertical(top: Radius.circular(modal));
 }
+

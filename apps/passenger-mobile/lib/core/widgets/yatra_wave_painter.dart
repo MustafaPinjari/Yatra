@@ -198,3 +198,4 @@ class YatraWavePainter extends CustomPainter {
   bool shouldRepaint(covariant YatraWavePainter oldDelegate) =>
       oldDelegate.variant != variant;
 }
+
