@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="320" height="80" fill="none">
+  <!-- YATRA Wordmark with Delhi Transit Subtitle -->
+  <text x="10" y="46" font-family="'Playfair Display', Georgia, serif" font-size="42" font-weight="800" fill="#101B3A" letter-spacing="4">YATRA</text>
+  <circle cx="205" cy="36" r="5" fill="#E96835" />
+  <text x="12" y="68" font-family="'Inter', sans-serif" font-size="10.5" font-weight="600" fill="#16764C" letter-spacing="2.5">ACCESSIBLE · INCLUSIVE · RELIABLE</text>
+</svg>

@@ -2,250 +2,233 @@
 
 import React, { useState } from "react";
 import { YatraBrandLogo } from "@/components/brand/YatraBrandLogo";
-import { IntroScreen } from "@/components/screens/IntroScreen";
-import { PassengerHomeScreen } from "@/components/screens/PassengerHomeScreen";
-import { JourneyPlannerView } from "@/components/screens/JourneyPlannerView";
-import { LiveTrackingView } from "@/components/screens/LiveTrackingView";
-import { AssistanceScreen } from "@/components/screens/AssistanceScreen";
-import { AccessibleStopsView } from "@/components/screens/AccessibleStopsView";
 import { OperatorCommandView } from "@/components/screens/OperatorCommandView";
 import { GovtIntelligenceView } from "@/components/screens/GovtIntelligenceView";
+import { AssistanceRequestsTable } from "@/components/AssistanceRequestsTable";
+import { IncidentQueue } from "@/components/IncidentQueue";
+import { FleetOverview } from "@/components/FleetOverview";
+import { TrustVerificationBadge } from "@/components/TrustVerificationBadge";
 import {
-  Smartphone,
   LayoutDashboard,
+  Radio,
+  AlertTriangle,
   Building,
+  Bus,
+  ShieldCheck,
+  Activity,
+  User,
 } from "lucide-react";
 
-type PrimaryPortal = "PASSENGER" | "OPERATOR" | "GOVERNMENT";
-type PassengerTab = "intro" | "home" | "planner" | "tracking" | "assistance" | "stops";
+type WebPortalTab = "COMMAND" | "ASSISTANCE" | "INCIDENTS" | "FLEET" | "GOVERNMENT";
 
-export default function YatraMasterApp() {
-  const [activePortal, setActivePortal] = useState<PrimaryPortal>("PASSENGER");
-  const [passengerTab, setPassengerTab] = useState<PassengerTab>("home");
-  const [mobileFrameMode, setMobileFrameMode] = useState(true);
+export default function OperatorWebMaster() {
+  const [activeTab, setActiveTab] = useState<WebPortalTab>("COMMAND");
 
   return (
-    <div className="min-h-screen bg-[#F7F2E9] text-[#101B3A] flex flex-col font-sans selection:bg-[#E96835] selection:text-white">
+    <div className="min-h-screen bg-[#0B132B] text-slate-100 flex flex-col font-sans selection:bg-[#E96835] selection:text-white">
       {/* ==============================================================================
-          GLOBAL AUDIT & PORTAL CONTROLLER HEADER
+          1. TOP DESKTOP MASTHEAD & CONTROL BAR
       ============================================================================== */}
-      <header className="sticky top-0 z-50 bg-[#172653] text-white border-b border-[#101B3A] shadow-md px-4 sm:px-6 py-2.5">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-          {/* Brand mark */}
+      <header className="sticky top-0 z-50 bg-[#101B3A] border-b border-slate-800 shadow-md px-6 py-3">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+          {/* Brand Identity & Role Badge */}
           <div className="flex items-center gap-3">
             <YatraBrandLogo size="sm" variant="light" />
-            <div className="hidden sm:block h-5 w-px bg-slate-700" />
-            <span className="hidden sm:inline-block text-xs font-semibold text-slate-300">
-              Approved Visual Reference Implementation
-            </span>
+            <div className="hidden md:block h-5 w-px bg-slate-700" />
+            <div className="hidden md:block">
+              <span className="text-xs font-bold text-white tracking-wide">
+                OPERATOR COMMAND & MUNICIPAL INTELLIGENCE
+              </span>
+              <p className="text-[10px] text-slate-400">
+                Delhi Transport Corporation · Universal Accessibility Network
+              </p>
+            </div>
           </div>
 
-          {/* Primary Portal Switcher Tabs */}
-          <div className="flex items-center gap-1.5 bg-[#101B3A] p-1 rounded-xl border border-slate-700 text-xs font-semibold">
+          {/* Primary Portal Navigation Tabs */}
+          <nav aria-label="Portal Navigation" className="flex items-center gap-1.5 bg-[#0B132B] p-1 rounded-xl border border-slate-800 text-xs font-semibold">
             <button
-              onClick={() => setActivePortal("PASSENGER")}
+              onClick={() => setActiveTab("COMMAND")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                activePortal === "PASSENGER"
+                activeTab === "COMMAND"
                   ? "bg-[#E96835] text-white shadow-xs font-bold"
-                  : "text-slate-300 hover:text-white"
-              }`}
-            >
-              <Smartphone className="h-3.5 w-3.5" />
-              <span>Passenger App</span>
-            </button>
-
-            <button
-              onClick={() => setActivePortal("OPERATOR")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                activePortal === "OPERATOR"
-                  ? "bg-[#E96835] text-white shadow-xs font-bold"
-                  : "text-slate-300 hover:text-white"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
               <LayoutDashboard className="h-3.5 w-3.5" />
-              <span>Operator Portal</span>
+              <span>Command Centre</span>
             </button>
 
             <button
-              onClick={() => setActivePortal("GOVERNMENT")}
+              onClick={() => setActiveTab("ASSISTANCE")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
-                activePortal === "GOVERNMENT"
+                activeTab === "ASSISTANCE"
                   ? "bg-[#E96835] text-white shadow-xs font-bold"
-                  : "text-slate-300 hover:text-white"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
-              <Building className="h-3.5 w-3.5" />
+              <Radio className="h-3.5 w-3.5 text-[#E96835]" />
+              <span>Assistance Queue</span>
+              <span className="rounded-full bg-[#E96835] text-white text-[10px] px-1.5 py-0.2 font-bold">3</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("INCIDENTS")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeTab === "INCIDENTS"
+                  ? "bg-[#E96835] text-white shadow-xs font-bold"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800"
+              }`}
+            >
+              <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+              <span>Maintenance & Incidents</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("FLEET")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeTab === "FLEET"
+                  ? "bg-[#E96835] text-white shadow-xs font-bold"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800"
+              }`}
+            >
+              <Bus className="h-3.5 w-3.5" />
+              <span>Fleet Operations</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("GOVERNMENT")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                activeTab === "GOVERNMENT"
+                  ? "bg-[#16764C] text-white shadow-xs font-bold"
+                  : "text-slate-300 hover:text-white hover:bg-slate-800"
+              }`}
+            >
+              <Building className="h-3.5 w-3.5 text-emerald-300" />
               <span>Govt Intelligence</span>
             </button>
-          </div>
+          </nav>
 
-          {/* Contextual Controller: Mobile Viewport Toggle (when on Passenger) */}
-          <div className="flex items-center gap-3 text-xs">
-            {activePortal === "PASSENGER" && (
-              <button
-                onClick={() => setMobileFrameMode(!mobileFrameMode)}
-                className="hidden sm:flex items-center gap-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 px-2.5 py-1 text-slate-300 cursor-pointer transition-colors"
-                title="Toggle Phone Viewport Container vs Responsive Full-Width"
-              >
-                <Smartphone className="h-3.5 w-3.5 text-[#E96835]" />
-                <span>{mobileFrameMode ? "Viewport: Phone Frame" : "Viewport: Responsive"}</span>
-              </button>
-            )}
-            <span className="rounded bg-[#16764C] px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase text-white">
-              Pixel-Fidelity Active
-            </span>
+          {/* Right Status Controls */}
+          <div className="hidden lg:flex items-center gap-4 text-xs">
+            <div className="flex items-center gap-1.5 text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-1 rounded-full">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Sepolia Ledger Synced</span>
+            </div>
+
+            <div className="flex items-center gap-2 pl-2 border-l border-slate-700">
+              <div className="h-7 w-7 rounded-full bg-slate-700 flex items-center justify-center text-slate-200">
+                <User className="h-3.5 w-3.5" />
+              </div>
+              <div className="text-left">
+                <p className="font-semibold text-slate-200">Officer A. Sharma</p>
+                <p className="text-[10px] text-slate-400">Delhi South Control</p>
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
       {/* ==============================================================================
-          PASSENGER SUB-NAVIGATION BAR (Visible when Passenger Portal is selected)
+          2. PORTAL BODY CONTENT (DESKTOP WORKFLOWS)
       ============================================================================== */}
-      {activePortal === "PASSENGER" && (
-        <div className="bg-[#FFFCF7] border-b border-[#E6DDD0] px-4 py-2 sticky top-[57px] z-40 shadow-xs">
-          <div className="max-w-4xl mx-auto flex items-center justify-between overflow-x-auto gap-2 text-xs">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748B] flex-shrink-0 mr-1">
-              Screen Views:
-            </span>
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-              <button
-                onClick={() => setPassengerTab("intro")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors cursor-pointer flex-shrink-0 ${
-                  passengerTab === "intro"
-                    ? "bg-[#172653] text-white"
-                    : "text-[#64748B] hover:text-[#101B3A] bg-[#FAF5EE]"
-                }`}
-              >
-                A. Introduction Screen
-              </button>
-              <button
-                onClick={() => setPassengerTab("home")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors cursor-pointer flex-shrink-0 ${
-                  passengerTab === "home"
-                    ? "bg-[#172653] text-white"
-                    : "text-[#64748B] hover:text-[#101B3A] bg-[#FAF5EE]"
-                }`}
-              >
-                B. Passenger Home
-              </button>
-              <button
-                onClick={() => setPassengerTab("planner")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors cursor-pointer flex-shrink-0 ${
-                  passengerTab === "planner"
-                    ? "bg-[#172653] text-white"
-                    : "text-[#64748B] hover:text-[#101B3A] bg-[#FAF5EE]"
-                }`}
-              >
-                C. Journey Planner
-              </button>
-              <button
-                onClick={() => setPassengerTab("tracking")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors cursor-pointer flex-shrink-0 ${
-                  passengerTab === "tracking"
-                    ? "bg-[#172653] text-white"
-                    : "text-[#64748B] hover:text-[#101B3A] bg-[#FAF5EE]"
-                }`}
-              >
-                D. Live Bus Tracking
-              </button>
-              <button
-                onClick={() => setPassengerTab("assistance")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors cursor-pointer flex-shrink-0 ${
-                  passengerTab === "assistance"
-                    ? "bg-[#172653] text-white"
-                    : "text-[#64748B] hover:text-[#101B3A] bg-[#FAF5EE]"
-                }`}
-              >
-                E. Boarding Assistance
-              </button>
-              <button
-                onClick={() => setPassengerTab("stops")}
-                className={`px-3 py-1 rounded-full font-semibold transition-colors cursor-pointer flex-shrink-0 ${
-                  passengerTab === "stops"
-                    ? "bg-[#172653] text-white"
-                    : "text-[#64748B] hover:text-[#101B3A] bg-[#FAF5EE]"
-                }`}
-              >
-                F. Accessible Stops
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ==============================================================================
-          MAIN CONTENT DISPLAY ROUTER
-      ============================================================================== */}
-      <main className="flex-1 py-6 px-3 sm:px-6">
-        {/* VIEW 1: PASSENGER APPLICATION (A through F) */}
-        {activePortal === "PASSENGER" && (
-          <div className="w-full">
-            {mobileFrameMode ? (
-              /* Phone Frame Container matching reference mobile proportions */
-              <div className="max-w-[430px] mx-auto min-h-[820px] rounded-[36px] border-[6px] border-[#101B3A] bg-[#F7F2E9] shadow-2xl overflow-hidden relative transition-all">
-                {/* Phone Speaker Notch bar */}
-                <div className="w-full bg-[#101B3A] h-6 flex items-center justify-center">
-                  <div className="h-1.5 w-16 rounded-full bg-slate-700" />
-                </div>
-
-                <div className="min-h-[790px] flex flex-col justify-between">
-                  {passengerTab === "intro" && (
-                    <IntroScreen onExplore={() => setPassengerTab("home")} />
-                  )}
-                  {passengerTab === "home" && (
-                    <PassengerHomeScreen onNavigateTab={(tab) => setPassengerTab(tab as PassengerTab)} />
-                  )}
-                  {passengerTab === "planner" && <JourneyPlannerView />}
-                  {passengerTab === "tracking" && <LiveTrackingView />}
-                  {passengerTab === "assistance" && <AssistanceScreen />}
-                  {passengerTab === "stops" && <AccessibleStopsView />}
-                </div>
-              </div>
-            ) : (
-              /* Responsive Full-Width View */
-              <div className="w-full">
-                {passengerTab === "intro" && (
-                  <IntroScreen onExplore={() => setPassengerTab("home")} />
-                )}
-                {passengerTab === "home" && (
-                  <PassengerHomeScreen onNavigateTab={(tab) => setPassengerTab(tab as PassengerTab)} />
-                )}
-                {passengerTab === "planner" && <JourneyPlannerView />}
-                {passengerTab === "tracking" && <LiveTrackingView />}
-                {passengerTab === "assistance" && <AssistanceScreen />}
-                {passengerTab === "stops" && <AccessibleStopsView />}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* VIEW 2: OPERATOR PORTAL (Bottom-Left reference dashboard) */}
-        {activePortal === "OPERATOR" && (
-          <div className="max-w-7xl mx-auto">
+      <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
+        {activeTab === "COMMAND" && (
+          <div className="space-y-6">
             <OperatorCommandView />
           </div>
         )}
 
-        {/* VIEW 3: GOVERNMENT INTELLIGENCE PORTAL (Bottom-Right reference dashboard) */}
-        {activePortal === "GOVERNMENT" && (
-          <div className="max-w-7xl mx-auto">
+        {activeTab === "ASSISTANCE" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div>
+                <h1 className="text-2xl font-bold text-white">Live Boarding Assistance Requests</h1>
+                <p className="text-xs text-slate-400 mt-1">
+                  AccessHandshake signals transmitted from stops to approaching DTC drivers via Redis event bus.
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-slate-400">Auto-refresh: 5s</span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 text-xs font-semibold">
+                  <Activity className="h-3.5 w-3.5 animate-pulse" /> Live WebSocket
+                </span>
+              </div>
+            </div>
+            <div className="bg-[#101B3A] rounded-2xl border border-slate-800 p-6 text-slate-900 shadow-xl">
+              <AssistanceRequestsTable />
+            </div>
+          </div>
+        )}
+
+        {activeTab === "INCIDENTS" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div>
+                <h1 className="text-2xl font-bold text-white">Accessibility & Maintenance Incident Queue</h1>
+                <p className="text-xs text-slate-400 mt-1">
+                  Automated Gemini AI summarization and SLA dispatch tracking for wheelchair ramps and curb obstructions.
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <IncidentQueue />
+              </div>
+              <div className="space-y-6">
+                <TrustVerificationBadge />
+                <div className="bg-[#101B3A] rounded-xl border border-slate-800 p-5 text-xs text-slate-300 space-y-3">
+                  <h3 className="font-bold text-white flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-emerald-400" />
+                    Ledger Attestation Protocol
+                  </h3>
+                  <p>
+                    Every verified ramp resolution is anchored to Ethereum Sepolia with cryptographic hashes of the technician&apos;s depot sign-off.
+                  </p>
+                  <div className="p-3 bg-slate-900 rounded-lg font-mono text-[11px] text-slate-400 break-all">
+                    Contract: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "FLEET" && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div>
+                <h1 className="text-2xl font-bold text-white">Delhi Fleet Operations & Headway Monitor</h1>
+                <p className="text-xs text-slate-400 mt-1">
+                  Crowdedness-aware fleet metrics, low-floor ratio, and real-time headway compliance.
+                </p>
+              </div>
+            </div>
+            <div className="bg-[#101B3A] rounded-2xl border border-slate-800 p-6 text-slate-900 shadow-xl">
+              <FleetOverview />
+            </div>
+          </div>
+        )}
+
+        {activeTab === "GOVERNMENT" && (
+          <div className="space-y-6 rounded-2xl bg-[#F7F2E9] text-[#101B3A] p-2 sm:p-6 shadow-2xl border border-[#E6DDD0]">
             <GovtIntelligenceView />
           </div>
         )}
       </main>
 
       {/* ==============================================================================
-          GLOBAL AUDIT FOOTER
+          3. DESKTOP FOOTER
       ============================================================================== */}
-      <footer className="border-t border-[#E6DDD0] bg-[#FFFCF7] py-4 px-6 text-center text-xs text-[#64748B]">
-        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p>
-            <strong>YATRA</strong> · Approved Design Reference Implementation · Delhi Transit Stack
-          </p>
-          <div className="flex items-center gap-4 text-[11px]">
-            <span>Palette: #F7F2E9 · #101B3A · #E96835 · #16764C</span>
-            <span>•</span>
-            <span>WCAG 2.2 AA Verified</span>
+      <footer className="border-t border-slate-800 bg-[#0B132B] px-6 py-4 text-xs text-slate-400">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p>© 2026 YATRA Operations Command · Delhi Transport Corporation (DTC) & GNCTD</p>
+          <div className="flex items-center gap-4 text-slate-400">
+            <span>GTFS-Realtime v2.0</span>
+            <span>·</span>
+            <span>AccessGraph v1.2</span>
+            <span>·</span>
+            <span>Trust Ledger: Sepolia Synced</span>
           </div>
         </div>
       </footer>

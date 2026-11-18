@@ -41,3 +41,4 @@ export function DelhiSkylineSvg({ className = "w-full h-full" }: { className?: s
     </svg>
   );
 }
+

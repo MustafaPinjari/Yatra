@@ -107,3 +107,4 @@ export function AssistanceEmpathySvg({ className = "w-full h-full" }: { classNam
     </svg>
   );
 }
+

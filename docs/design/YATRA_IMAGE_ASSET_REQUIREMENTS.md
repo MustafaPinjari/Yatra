@@ -268,3 +268,4 @@ When the production assets are rendered:
 1. Place the generated `.webp` and `.svg` files into `apps/operator-web/public/assets/illustrations/`.
 2. The `<AssetPlaceholder>` component automatically resolves any matching filename in `/assets/illustrations/${filename}`. If found, it renders the optimized high-resolution image; if not found, it seamlessly displays the calibrated editorial placeholder with the asset ID tag.
 3. Development Mode badge displays `[Asset ID]` in small monospace font; set `NEXT_PUBLIC_SHOW_ASSET_IDS=false` or compile for production to hide debug tags automatically.
+

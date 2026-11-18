@@ -145,3 +145,4 @@ export function IndiaGateHeroSvg({ className = "w-full h-full" }: { className?: 
     </svg>
   );
 }
+

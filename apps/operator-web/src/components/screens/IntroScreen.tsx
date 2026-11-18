@@ -97,3 +97,4 @@ export function IntroScreen({ onExplore }: IntroScreenProps) {
     </div>
   );
 }
+
