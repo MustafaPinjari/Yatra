@@ -1,0 +1,134 @@
+# ==============================================================================
+# YATRA Monorepo - Git Ignore Configuration
+# ==============================================================================
+
+# Environment and Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.pfx
+*.p12
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# IDE and Editor Files
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# Node.js and JavaScript / TypeScript
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-store/
+
+# Next.js
+.next/
+out/
+build/
+dist/
+.turbo/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+poetry.lock
+pip-wheel-metadata/
+
+# Flutter and Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+apps/*/build/
+apps/*/.dart_tool/
+apps/*/.flutter-plugins
+apps/*/.flutter-plugins-dependencies
+apps/*/android/.gradle/
+apps/*/android/captures/
+apps/*/android/gradlew
+apps/*/android/gradlew.bat
+apps/*/android/local.properties
+apps/*/ios/Flutter/App.framework
+apps/*/ios/Flutter/Flutter.framework
+apps/*/ios/Flutter/Flutter.podspec
+apps/*/ios/Flutter/Generated.xcconfig
+apps/*/ios/Flutter/app.flx
+apps/*/ios/Flutter/app.zip
+apps/*/ios/Flutter/flutter_assets/
+apps/*/ios/Pods/
+apps/*/ios/.symlinks/
+apps/*/ios/Runner/GeneratedPluginRegistrant.*
+apps/*/macos/Flutter/ephemeral/
+apps/*/windows/flutter/ephemeral/
+apps/*/linux/flutter/ephemeral/
+
+# Blockchain (Foundry / Hardhat)
+blockchain/out/
+blockchain/cache/
+blockchain/broadcast/
+artifacts/
+typechain/
+typechain-types/
+
+# Local Databases and Storage
+*.db
+*.sqlite
+*.sqlite3
+postgres_data/
+redis_data/
+
+# Datasets and Large Transport Data (Do not commit raw 16.1GB archives or GPS dumps)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/gtfs/*
+!data/gtfs/.gitkeep
+!data/gtfs/sample_stops.txt
+!data/gtfs/sample_routes.txt
+data/gps/*
+!data/gps/.gitkeep
+data/ticketing/*
+!data/ticketing/.gitkeep
+*.tar.gz
+*.zip
+*.7z
+*.rar
+*.csv.gz
+*.parquet.tmp
+

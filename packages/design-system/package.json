@@ -1,0 +1,14 @@
+{
+  "name": "@yatra/design-system",
+  "version": "0.1.0",
+  "description": "Accessible design tokens, color palettes, and themes for YATRA applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
+

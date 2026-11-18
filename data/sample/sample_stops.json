@@ -1,0 +1,63 @@
+[
+  {
+    "id": "stop_delhi_502_01",
+    "gtfsStopId": "DEL_STP_502_01",
+    "nameEn": "Kashmere Gate ISBT",
+    "nameHi": "कश्मीरी गेट आईएसबीटी",
+    "location": { "latitude": 28.6675, "longitude": 77.2285 },
+    "accessibilityScore": 92.5,
+    "hasWheelchairRamp": true,
+    "hasTactilePaving": true,
+    "hasShelter": true,
+    "curbHeightCm": 15.0
+  },
+  {
+    "id": "stop_delhi_502_02",
+    "gtfsStopId": "DEL_STP_502_02",
+    "nameEn": "Red Fort (Lal Qila)",
+    "nameHi": "लाल किला",
+    "location": { "latitude": 28.6562, "longitude": 77.2410 },
+    "accessibilityScore": 78.0,
+    "hasWheelchairRamp": true,
+    "hasTactilePaving": false,
+    "hasShelter": true,
+    "curbHeightCm": 18.0
+  },
+  {
+    "id": "stop_delhi_502_03",
+    "gtfsStopId": "DEL_STP_502_03",
+    "nameEn": "Delhi Gate",
+    "nameHi": "दिल्ली गेट",
+    "location": { "latitude": 28.6415, "longitude": 77.2405 },
+    "accessibilityScore": 65.0,
+    "hasWheelchairRamp": false,
+    "hasTactilePaving": false,
+    "hasShelter": true,
+    "curbHeightCm": 25.0
+  },
+  {
+    "id": "stop_delhi_502_04",
+    "gtfsStopId": "DEL_STP_502_04",
+    "nameEn": "AIIMS Metro Station",
+    "nameHi": "एम्स मेट्रो स्टेशन",
+    "location": { "latitude": 28.5684, "longitude": 77.2078 },
+    "accessibilityScore": 96.0,
+    "hasWheelchairRamp": true,
+    "hasTactilePaving": true,
+    "hasShelter": true,
+    "curbHeightCm": 14.5
+  },
+  {
+    "id": "stop_delhi_502_05",
+    "gtfsStopId": "DEL_STP_502_05",
+    "nameEn": "Mehrauli Terminal",
+    "nameHi": "महरौली टर्मिनल",
+    "location": { "latitude": 28.5175, "longitude": 77.1820 },
+    "accessibilityScore": 82.0,
+    "hasWheelchairRamp": true,
+    "hasTactilePaving": true,
+    "hasShelter": true,
+    "curbHeightCm": 16.0
+  }
+]
+

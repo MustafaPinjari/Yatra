@@ -1,0 +1,27 @@
+[
+  {
+    "id": "route_delhi_502",
+    "routeShortName": "502",
+    "routeLongName": "Kashmere Gate ISBT to Mehrauli Terminal",
+    "originName": "Kashmere Gate ISBT",
+    "destinationName": "Mehrauli Terminal",
+    "operatorCode": "DTC"
+  },
+  {
+    "id": "route_delhi_534",
+    "routeShortName": "534",
+    "routeLongName": "Anand Vihar ISBT to Mehrauli",
+    "originName": "Anand Vihar ISBT",
+    "destinationName": "Mehrauli Terminal",
+    "operatorCode": "DIMTS"
+  },
+  {
+    "id": "route_delhi_tms",
+    "routeShortName": "TMS(+)",
+    "routeLongName": "Teevra Mudrika Seva (Ring Road Clockwise)",
+    "originName": "Wazirpur Depot",
+    "destinationName": "Wazirpur Depot",
+    "operatorCode": "DTC"
+  }
+]
+
