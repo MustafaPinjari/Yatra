@@ -209,3 +209,4 @@ Copy and paste these exact prompts into Midjourney, DALL-E 3, or Google Imagen:
   `<AssetPlaceholder assetId="YATRA-ILL-001" filename="india-gate-hero.webp" />` automatically checks `public/assets/illustrations/${filename}`. If the file exists, it displays the high-res image; if not, it automatically falls back to an inline vector illustration with the catalog tag badge.
 - **Flutter (`apps/passenger-mobile`)**:
   `YatraAssetPlaceholder(assetId: 'YATRA-ILL-001')` renders the native canvas `CustomPainter` (`IndiaGatePainter`, `LowFloorBusPainter`, etc.). Once raster assets are saved into `apps/passenger-mobile/assets/images/`, `Image.asset()` will render them with zero delay.
+
