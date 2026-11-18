@@ -2,6 +2,7 @@
 
 import React from "react";
 import { AssetPlaceholder } from "@/components/AssetPlaceholder";
+import { YatraWaveBackground } from "@/components/brand/YatraWaveBackground";
 import {
   TrendingUp,
   ShieldCheck,
@@ -28,90 +29,92 @@ export function GovtIntelligenceView() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-8 space-y-8 bg-[#F7F2E9]">
-      {/* 1. Classical Government Header with Brand and India Gate Engraving */}
-      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-[#E6DDD0] gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <span className="rounded bg-[#172653] px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-widest">
-              Department of Transport
+    <div className="relative rounded-2xl overflow-hidden border border-[#E6DDD0]">
+      <YatraWaveBackground variant="editorial" opacity={0.65} />
+      <div className="relative z-10 max-w-5xl mx-auto p-4 sm:p-8 space-y-8 bg-[#F7F2E9]/80 backdrop-blur-xs">
+        {/* 1. Classical Government Header with Brand and India Gate Engraving */}
+        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-[#E6DDD0] gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <span className="rounded bg-[#172653] px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-widest">
+                Department of Transport
+              </span>
+              <span className="text-xs text-[#64748B]">Government of NCT of Delhi</span>
+            </div>
+            <h1 className="font-editorial-serif text-3xl sm:text-4xl font-black text-[#101B3A]">
+              Delhi Mobility & Accessibility Intelligence
+            </h1>
+            <p className="font-ui-sans text-xs text-[#64748B] mt-1">
+              Aggregated municipal audit metrics and accessibility compliance under Delhi Transit Stack
+            </p>
+          </div>
+
+          {/* Engraving Icon Placeholder (`YATRA-ILL-010`) */}
+          <div className="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
+            <AssetPlaceholder
+              assetId="YATRA-ILL-010"
+              filename="govt-india-gate-engraving.png"
+              alt="Classical architectural engraving of India Gate on cream parchment"
+              aspectRatio="1/1"
+              className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] shadow-editorial"
+              title="India Gate Engraving"
+            />
+          </div>
+        </header>
+
+        {/* 2. Four Headline Analytical Metrics (Large Serif Numerals) */}
+        <section aria-label="Core Municipal Metrics" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
+            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
+              Network Reliability
             </span>
-            <span className="text-xs text-[#64748B]">Government of NCT of Delhi</span>
+            <div className="flex items-baseline gap-1">
+              <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">94.2</span>
+              <span className="font-editorial-serif text-xl font-normal text-[#16764C]">%</span>
+            </div>
+            <p className="text-[11px] text-[#16764C] font-semibold flex items-center gap-1">
+              <TrendingUp className="h-3.5 w-3.5" /> +1.8% over last quarter
+            </p>
           </div>
-          <h1 className="font-editorial-serif text-3xl sm:text-4xl font-black text-[#101B3A]">
-            Delhi Mobility & Accessibility Intelligence
-          </h1>
-          <p className="font-ui-sans text-xs text-[#64748B] mt-1">
-            Aggregated municipal audit metrics and accessibility compliance under Delhi Transit Stack
-          </p>
-        </div>
 
-        {/* Engraving Icon Placeholder (`YATRA-ILL-010`) */}
-        <div className="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0">
-          <AssetPlaceholder
-            assetId="YATRA-ILL-010"
-            filename="govt-india-gate-engraving.webp"
-            alt="Classical architectural engraving of India Gate on cream parchment"
-            aspectRatio="1/1"
-            className="rounded-xl border border-[#E6DDD0] bg-[#FFFCF7]"
-            title="India Gate Engraving"
-          />
-        </div>
-      </header>
-
-      {/* 2. Four Headline Analytical Metrics (Large Serif Numerals) */}
-      <section aria-label="Core Municipal Metrics" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-          <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-            Network Reliability
-          </span>
-          <div className="flex items-baseline gap-1">
-            <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">94.2</span>
-            <span className="font-editorial-serif text-xl font-normal text-[#16764C]">%</span>
+          <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
+            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
+              AccessGraph Rating
+            </span>
+            <div className="flex items-baseline gap-1">
+              <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">87.4</span>
+              <span className="text-xs font-semibold text-[#64748B]">/100</span>
+            </div>
+            <p className="text-[11px] text-[#64748B]">
+              420 Stops Audited & Scored
+            </p>
           </div>
-          <p className="text-[11px] text-[#16764C] font-semibold flex items-center gap-1">
-            <TrendingUp className="h-3.5 w-3.5" /> +1.8% over last quarter
-          </p>
-        </div>
 
-        <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-          <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-            AccessGraph Rating
-          </span>
-          <div className="flex items-baseline gap-1">
-            <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">87.4</span>
-            <span className="text-xs font-semibold text-[#64748B]">/100</span>
+          <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
+            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
+              Daily Ridership
+            </span>
+            <div className="flex items-baseline gap-1">
+              <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">4.28</span>
+              <span className="font-editorial-serif text-xl font-normal text-[#101B3A]">M</span>
+            </div>
+            <p className="text-[11px] text-[#64748B]">
+              ETM Electronic Ticket Validation
+            </p>
           </div>
-          <p className="text-[11px] text-[#64748B]">
-            420 Stops Audited & Scored
-          </p>
-        </div>
 
-        <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-          <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-            Daily Ridership
-          </span>
-          <div className="flex items-baseline gap-1">
-            <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">4.28</span>
-            <span className="font-editorial-serif text-xl font-normal text-[#101B3A]">M</span>
+          <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
+            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
+              Assistance Fulfilled
+            </span>
+            <div className="flex items-baseline gap-1">
+              <span className="font-editorial-serif text-4xl font-bold text-[#E96835]">1,420</span>
+            </div>
+            <p className="text-[11px] text-[#16764C] font-semibold flex items-center gap-1">
+              <CheckCircle2 className="h-3.5 w-3.5" /> 98.6% Completion Rate
+            </p>
           </div>
-          <p className="text-[11px] text-[#64748B]">
-            ETM Electronic Ticket Validation
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-          <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-            Assistance Fulfilled
-          </span>
-          <div className="flex items-baseline gap-1">
-            <span className="font-editorial-serif text-4xl font-bold text-[#E96835]">1,420</span>
-          </div>
-          <p className="text-[11px] text-[#16764C] font-semibold flex items-center gap-1">
-            <CheckCircle2 className="h-3.5 w-3.5" /> 98.6% Completion Rate
-          </p>
-        </div>
-      </section>
+        </section>
 
       {/* 3. Analytical Charts Grid: Coverage Breakdown + Weekly Assistance Trend */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -227,5 +230,6 @@ export function GovtIntelligenceView() {
         </div>
       </section>
     </div>
+  </div>
   );
 }

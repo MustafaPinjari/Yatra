@@ -16,7 +16,7 @@ interface AssetPlaceholderProps {
 
 const ASSET_REGISTRY: Record<
   string,
-  { filename: string; defaultRatio: string; title: string; priority: string }
+  { filename: string; defaultRatio: string; title: string; priority: string; isBrand?: boolean }
 > = {
   "YATRA-ILL-001": {
     filename: "india-gate-hero.webp",
@@ -25,70 +25,72 @@ const ASSET_REGISTRY: Record<
     priority: "CRITICAL",
   },
   "YATRA-ILL-002": {
-    filename: "delhi-bus-isometric.webp",
+    filename: "delhi-bus-isometric.png",
     defaultRatio: "aspect-[16/10]",
     title: "Delhi Low-Floor Transit Bus",
     priority: "CRITICAL",
   },
   "YATRA-ILL-003": {
-    filename: "delhi-skyline-arch.webp",
+    filename: "delhi-skyline-arch.png",
     defaultRatio: "aspect-[21/9]",
     title: "Delhi Architectural Skyline",
     priority: "HIGH",
   },
   "YATRA-ILL-004": {
-    filename: "boarding-assistance-empathy.webp",
+    filename: "boarding-assistance-empathy.png",
     defaultRatio: "aspect-[16/9]",
     title: "Boarding Assistance Interaction",
     priority: "CRITICAL",
   },
   "YATRA-ILL-005": {
-    filename: "wheelchair-ramp-card.webp",
+    filename: "wheelchair-ramp-card.png",
     defaultRatio: "aspect-square",
     title: "Wheelchair Ramp Deployment",
     priority: "HIGH",
   },
   "YATRA-ILL-006": {
-    filename: "vision-support-card.webp",
+    filename: "vision-support-card.png",
     defaultRatio: "aspect-square",
     title: "Vision & Audio Support",
     priority: "HIGH",
   },
   "YATRA-ILL-007": {
-    filename: "elderly-mobility-card.webp",
+    filename: "elderly-mobility-card.png",
     defaultRatio: "aspect-square",
     title: "Elderly & Mobility Support",
     priority: "HIGH",
   },
   "YATRA-ILL-008": {
-    filename: "accessible-stop-photo.webp",
+    filename: "accessible-stop-photo.png",
     defaultRatio: "aspect-[16/9]",
     title: "AIIMS Accessible Bus Shelter",
     priority: "HIGH",
   },
   "YATRA-ILL-009": {
-    filename: "delhi-dark-map-texture.webp",
+    filename: "delhi-dark-map-texture.png",
     defaultRatio: "aspect-[16/10]",
     title: "Delhi Dark Fleet Map Texture",
     priority: "HIGH",
   },
   "YATRA-ILL-010": {
-    filename: "govt-india-gate-engraving.webp",
+    filename: "govt-india-gate-engraving.png",
     defaultRatio: "aspect-[4/3]",
     title: "India Gate Architectural Engraving",
     priority: "HIGH",
   },
   "YATRA-BRAND-001": {
-    filename: "yatra-brand-symbol.svg",
+    filename: "yatra-brand-symbol.png",
     defaultRatio: "aspect-square",
     title: "YATRA Brand Symbol Mark",
     priority: "CRITICAL",
+    isBrand: true,
   },
   "YATRA-BRAND-002": {
-    filename: "yatra-wordmark.svg",
+    filename: "DelhiTransitYatraLogo.png",
     defaultRatio: "aspect-[4/1]",
     title: "YATRA Serif Wordmark",
     priority: "CRITICAL",
+    isBrand: true,
   },
 };
 
@@ -111,7 +113,8 @@ export function AssetPlaceholder({
   };
 
   const resolvedFilename = filename || info.filename;
-  const imageSrc = `/assets/illustrations/${resolvedFilename}`;
+  const folder = info.isBrand ? "brand" : "illustrations";
+  const imageSrc = `/assets/${folder}/${resolvedFilename}`;
 
   const ratioClass = aspectRatio
     ? aspectRatio === "4/5"
@@ -129,7 +132,7 @@ export function AssetPlaceholder({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-xl border border-[#E6DDD0] bg-[#FAF5EE] transition-all ${ratioClass} ${className}`}
+      className={`relative overflow-hidden rounded-yatra-card border border-[#E6DDD0] bg-[#FAF5EE] transition-all shadow-editorial ${ratioClass} ${className}`}
       role="img"
       aria-label={alt}
     >
@@ -179,23 +182,13 @@ export function AssetPlaceholder({
         </div>
       )}
 
-      {/* Non-intrusive Dev ID Overlay Badge */}
+      {/* Subtle Asset Inventory Badge */}
       {showDevBadge && (
-        <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5 rounded bg-[#101B3A]/85 px-2 py-0.5 text-[10px] font-mono font-medium tracking-wide text-white shadow-xs backdrop-blur-xs">
+        <div className="absolute bottom-2.5 right-2.5 z-20 flex items-center gap-1.5 rounded-yatra-sm bg-[#101B3A]/85 backdrop-blur-xs px-2 py-0.5 text-[9px] font-mono font-medium text-white shadow-xs">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#16764C]" />
           <span>{assetId}</span>
-          <span className="opacity-60">·</span>
-          <span
-            className={
-              info.priority === "CRITICAL"
-                ? "text-amber-300 font-bold"
-                : "text-slate-300"
-            }
-          >
-            {info.priority}
-          </span>
         </div>
       )}
     </div>
   );
 }
-

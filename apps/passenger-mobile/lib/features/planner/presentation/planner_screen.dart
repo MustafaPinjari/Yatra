@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/yatra_colors.dart';
 import '../../../core/theme/yatra_typography.dart';
+import '../../../core/theme/yatra_radii.dart';
+import '../../../core/widgets/yatra_wave_background.dart';
 
 class JourneyPlannerScreen extends StatefulWidget {
   const JourneyPlannerScreen({super.key});
@@ -30,36 +32,45 @@ class _JourneyPlannerScreenState extends State<JourneyPlannerScreen> {
           onPressed: () => context.pop(),
         ),
       ),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-          children: [
-            // Mode Selectors: Bus, Metro, Multimodal
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: YatraColors.surfaceCream,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: YatraColors.softBorder),
+      body: YatraWaveBackground(
+        variant: YatraWaveVariant.subtle,
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
+            children: [
+              // Mode Selectors: Bus, Metro, Multimodal
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: YatraColors.surfaceCream,
+                  borderRadius: BorderRadius.circular(YatraRadii.input),
+                  border: Border.all(color: YatraColors.softBorder),
+                ),
+                child: Row(
+                  children: [
+                    _buildModeButton(0, 'Bus Only', Icons.directions_bus),
+                    _buildModeButton(1, 'Metro', Icons.train),
+                    _buildModeButton(2, 'Multimodal', Icons.alt_route),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  _buildModeButton(0, 'Bus Only', Icons.directions_bus),
-                  _buildModeButton(1, 'Metro', Icons.train),
-                  _buildModeButton(2, 'Multimodal', Icons.alt_route),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Origin & Destination Inputs with Swap Icon
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: YatraColors.surfaceCream,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: YatraColors.softBorder, width: 1.2),
-              ),
+              // Origin & Destination Inputs with Swap Icon
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: YatraColors.surfaceCream,
+                  borderRadius: BorderRadius.circular(YatraRadii.card),
+                  border: Border.all(color: YatraColors.softBorder, width: 1.2),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x06101B3A),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
               child: Column(
                 children: [
                   Row(
@@ -197,6 +208,7 @@ class _JourneyPlannerScreenState extends State<JourneyPlannerScreen> {
             const SizedBox(height: 24),
           ],
         ),
+      ),
       ),
     );
   }

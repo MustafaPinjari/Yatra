@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/yatra_colors.dart';
 import '../../../core/theme/yatra_typography.dart';
+import '../../../core/theme/yatra_radii.dart';
 import '../../../core/widgets/yatra_painters.dart';
 
 class LiveTrackingScreen extends StatefulWidget {
@@ -54,20 +55,37 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> with SingleTick
       body: SafeArea(
         child: Column(
           children: [
-            // Map Canvas View with Live Animated Bus Beacon
+            // Map Canvas View with Live Animated Bus Beacon & Dark Map Texture
             Expanded(
               flex: 4,
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
+                  color: const Color(0xFF0F172A),
+                  borderRadius: BorderRadius.circular(YatraRadii.featureCard),
                   border: Border.all(color: YatraColors.softBorder, width: 1.2),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x12101B3A),
+                      blurRadius: 12,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(YatraRadii.featureCard),
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
+                      // Cartographic Dark Map Texture
+                      Opacity(
+                        opacity: 0.3,
+                        child: Image.asset(
+                          'assets/images/delhi-dark-map-texture.png',
+                          fit: BoxFit.cover,
+                          errorBuilder: (ctx, err, stack) => const SizedBox.shrink(),
+                        ),
+                      ),
                       AnimatedBuilder(
                         animation: _animController,
                         builder: (context, child) {
@@ -83,7 +101,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> with SingleTick
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
                             color: YatraColors.inkPrimary.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(YatraRadii.sm),
                           ),
                           child: const Row(
                             children: [
@@ -114,10 +132,10 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> with SingleTick
               flex: 5,
               child: Container(
                 padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: YatraColors.surfaceCream,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-                  boxShadow: [
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(YatraRadii.modal)),
+                  boxShadow: const [
                     BoxShadow(
                       color: Color(0x0F000000),
                       blurRadius: 12,

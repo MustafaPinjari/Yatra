@@ -138,10 +138,17 @@ export function OperatorCommandView() {
         </div>
 
         {/* 3. Dark Cartographic Operations Map Simulation (`YATRA-ILL-009`) */}
-        <div className="relative h-[280px] sm:h-[320px] rounded-xl border border-slate-800 bg-[#070D1E] overflow-hidden">
+        <div className="relative h-[280px] sm:h-[320px] rounded-yatra-card border border-slate-800 bg-[#070D1E] overflow-hidden">
+          {/* Real Cartographic Map Texture Underlay */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/assets/illustrations/delhi-dark-map-texture.png"
+            alt="Delhi Dark Transit Network Cartographic Base"
+            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen pointer-events-none"
+          />
           <svg
             viewBox="0 0 800 360"
-            className="w-full h-full object-cover"
+            className="relative z-10 w-full h-full object-cover"
             xmlns="http://www.w3.org/2000/svg"
           >
             {/* Dark Delhi Transit Grid Lines */}

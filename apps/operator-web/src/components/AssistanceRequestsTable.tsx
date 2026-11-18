@@ -87,18 +87,28 @@ export function AssistanceRequestsTable() {
   };
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-        <div>
-          <h2 className="text-lg font-bold text-slate-900">
-            Live AccessHandshake Assistance Queue
-          </h2>
-          <p className="text-xs text-slate-500">
-            Real-time boarding assistance alerts synchronized via Redis between passenger mobile and driver consoles
-          </p>
+    <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-6 shadow-editorial">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-[#E6DDD0] pb-4 gap-4">
+        <div className="flex items-center gap-4">
+          <div className="h-14 w-20 flex-shrink-0 rounded-yatra-card overflow-hidden border border-[#E6DDD0] bg-[#FAF5EE]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/illustrations/boarding-assistance-empathy.png"
+              alt="Passenger-Driver Assistance Empathy"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold font-editorial-serif text-[#101B3A]">
+              Live AccessHandshake Assistance Queue
+            </h2>
+            <p className="text-xs text-[#64748B]">
+              Real-time boarding assistance alerts synchronized via Redis between passenger mobile and driver consoles
+            </p>
+          </div>
         </div>
-        <span className="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-          Showing 3 Sample Requests
+        <span className="rounded-md bg-[#FAF5EE] border border-[#E6DDD0] px-2.5 py-1 text-xs font-semibold text-[#172653]">
+          Showing 3 Live Requests
         </span>
       </div>
 

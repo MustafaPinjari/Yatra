@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { YatraBrandLogo } from "@/components/brand/YatraBrandLogo";
+import { YatraWaveBackground } from "@/components/brand/YatraWaveBackground";
 import { OperatorCommandView } from "@/components/screens/OperatorCommandView";
 import { GovtIntelligenceView } from "@/components/screens/GovtIntelligenceView";
 import { AssistanceRequestsTable } from "@/components/AssistanceRequestsTable";
@@ -132,7 +133,9 @@ export default function OperatorWebMaster() {
       {/* ==============================================================================
           2. PORTAL BODY CONTENT (DESKTOP WORKFLOWS)
       ============================================================================== */}
-      <main className="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
+      <main className="relative flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full">
+        <YatraWaveBackground variant="subtle" opacity={0.25} />
+        <div className="relative z-10 space-y-6">
         {activeTab === "COMMAND" && (
           <div className="space-y-6">
             <OperatorCommandView />
@@ -215,6 +218,7 @@ export default function OperatorWebMaster() {
             <GovtIntelligenceView />
           </div>
         )}
+        </div>
       </main>
 
       {/* ==============================================================================

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/yatra_colors.dart';
+import '../theme/yatra_radii.dart';
 import 'yatra_painters.dart';
 
 /// Asset Inventory mapping directly to `docs/design/IMAGE_PLACEMENT_MAP.md`
@@ -8,6 +9,7 @@ class YatraAssetPlaceholder extends StatelessWidget {
   final double aspectRatio;
   final String semanticLabel;
   final Widget? fallbackChild;
+  final BorderRadius borderRadius;
 
   const YatraAssetPlaceholder({
     super.key,
@@ -15,15 +17,22 @@ class YatraAssetPlaceholder extends StatelessWidget {
     this.aspectRatio = 16 / 9,
     this.semanticLabel = 'YATRA Living Atlas Illustration',
     this.fallbackChild,
+    this.borderRadius = YatraRadii.radiusCard,
   });
 
   static const Map<String, String> _assetFilenames = {
     'YATRA-ILL-001': 'assets/images/india-gate-hero.webp',
-    'YATRA-ILL-002': 'assets/images/delhi-bus-isometric.webp',
-    'YATRA-ILL-003': 'assets/images/delhi-skyline-arch.webp',
-    'YATRA-ILL-004': 'assets/images/boarding-assistance-empathy.webp',
-    'YATRA-BRAND-001': 'assets/brand/yatra-brand-masthead.png',
-    'YATRA-BRAND-002': 'assets/brand/yatra-wordmark.png',
+    'YATRA-ILL-002': 'assets/images/delhi-bus-isometric.png',
+    'YATRA-ILL-003': 'assets/images/delhi-skyline-arch.png',
+    'YATRA-ILL-004': 'assets/images/boarding-assistance-empathy.png',
+    'YATRA-ILL-005': 'assets/images/wheelchair-ramp-card.png',
+    'YATRA-ILL-006': 'assets/images/vision-support-card.png',
+    'YATRA-ILL-007': 'assets/images/elderly-mobility-card.png',
+    'YATRA-ILL-008': 'assets/images/accessible-stop-photo.png',
+    'YATRA-ILL-009': 'assets/images/delhi-dark-map-texture.png',
+    'YATRA-ILL-010': 'assets/images/govt-india-gate-engraving.png',
+    'YATRA-BRAND-001': 'assets/brand/yatra-brand-symbol.png',
+    'YATRA-BRAND-002': 'assets/brand/DelhiTransitYatraLogo.png',
   };
 
   @override
@@ -32,12 +41,12 @@ class YatraAssetPlaceholder extends StatelessWidget {
       label: semanticLabel,
       image: true,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: borderRadius,
         child: Container(
           decoration: BoxDecoration(
             color: YatraColors.surfaceCream,
             border: Border.all(color: YatraColors.softBorder, width: 1.2),
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: borderRadius,
           ),
           child: AspectRatio(
             aspectRatio: aspectRatio,
@@ -55,7 +64,7 @@ class YatraAssetPlaceholder extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: YatraColors.inkPrimary.withValues(alpha: 0.85),
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: YatraRadii.radiusSm,
                     ),
                     child: Text(
                       assetId,

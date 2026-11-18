@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'yatra_colors.dart';
+import 'yatra_radii.dart';
 import 'yatra_typography.dart';
 
 /// Complete Material 3 Theme for YATRA Passenger Application
@@ -21,7 +22,7 @@ class YatraTheme {
         onError: Colors.white,
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: YatraColors.parchmentBg,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
@@ -34,22 +35,22 @@ class YatraTheme {
           color: YatraColors.inkPrimary,
         ),
       ),
-      cardTheme: CardThemeData(
+      cardTheme: const CardThemeData(
         color: YatraColors.surfaceCream,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: YatraColors.softBorder, width: 1.2),
+          borderRadius: YatraRadii.radiusCard,
+          side: BorderSide(color: YatraColors.softBorder, width: 1.2),
         ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: YatraColors.terracotta,
           foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(52), // WCAG touch target
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+          minimumSize: const Size.fromHeight(50), // WCAG touch target
+          shape: const RoundedRectangleBorder(
+            borderRadius: YatraRadii.radiusButton,
           ),
           textStyle: const TextStyle(
             fontFamily: 'Inter',
@@ -65,8 +66,8 @@ class YatraTheme {
           foregroundColor: YatraColors.inkPrimary,
           minimumSize: const Size.fromHeight(48),
           side: const BorderSide(color: YatraColors.softBorder, width: 1.5),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+          shape: const RoundedRectangleBorder(
+            borderRadius: YatraRadii.radiusButton,
           ),
           textStyle: const TextStyle(
             fontFamily: 'Inter',
@@ -79,17 +80,17 @@ class YatraTheme {
         filled: true,
         fillColor: YatraColors.surfaceCream,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: YatraColors.softBorder, width: 1.2),
+        border: const OutlineInputBorder(
+          borderRadius: YatraRadii.radiusInput,
+          borderSide: BorderSide(color: YatraColors.softBorder, width: 1.2),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: YatraColors.softBorder, width: 1.2),
+        enabledBorder: const OutlineInputBorder(
+          borderRadius: YatraRadii.radiusInput,
+          borderSide: BorderSide(color: YatraColors.softBorder, width: 1.2),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: YatraColors.terracotta, width: 2),
+        focusedBorder: const OutlineInputBorder(
+          borderRadius: YatraRadii.radiusInput,
+          borderSide: BorderSide(color: YatraColors.terracotta, width: 2),
         ),
         hintStyle: YatraTypography.bodySans(
           fontSize: 14,
