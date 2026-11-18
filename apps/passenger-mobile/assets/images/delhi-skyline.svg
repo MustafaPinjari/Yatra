@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 240" width="1000" height="240" fill="none">
+  <!-- Delhi Panoramic Skyline Architectural Silhouette -->
+  <!-- Base Ground Line -->
+  <line x1="0" y1="230" x2="1000" y2="230" stroke="#101B3A" stroke-width="4" />
+
+  <!-- Qutub Minar Silhouette (Left) -->
+  <g transform="translate(80, 20)">
+    <polygon points="25,210 15,30 35,30 45,210" fill="#E5C39E" stroke="#101B3A" stroke-width="2" />
+    <!-- Balconies / Ribs -->
+    <line x1="18" y1="75" x2="42" y2="75" stroke="#101B3A" stroke-width="2.5" />
+    <line x1="20" y1="120" x2="40" y2="120" stroke="#101B3A" stroke-width="2.5" />
+    <line x1="22" y1="165" x2="38" y2="165" stroke="#101B3A" stroke-width="2.5" />
+    <path d="M22 30 Q30 10 38 30 Z" fill="#E96835" stroke="#101B3A" stroke-width="2" />
+  </g>
+
+  <!-- Metro Elevated Viaduct & Pylons (Background transit connection) -->
+  <line x1="160" y1="150" x2="520" y2="150" stroke="#172653" stroke-width="6" />
+  <line x1="220" y1="150" x2="220" y2="230" stroke="#172653" stroke-width="5" />
+  <line x1="320" y1="150" x2="320" y2="230" stroke="#172653" stroke-width="5" />
+  <line x1="420" y1="150" x2="420" y2="230" stroke="#172653" stroke-width="5" />
+  <!-- Metro Train Car -->
+  <rect x="250" y="132" width="120" height="18" rx="4" fill="#CBD5E1" stroke="#DC2626" stroke-width="2" />
+
+  <!-- Red Fort / Jama Masjid Mughal Domes (Middle) -->
+  <g transform="translate(480, 80)">
+    <!-- Main Pavilion Wall -->
+    <rect x="20" y="70" width="160" height="80" fill="#E5C39E" stroke="#101B3A" stroke-width="2.5" />
+    <path d="M70 150 V100 C70 85 130 85 130 100 V150 Z" fill="#F7F2E9" stroke="#101B3A" stroke-width="2" />
+    <!-- Center Onion Dome -->
+    <path d="M80 70 C80 30, 100 10, 100 10 C100 10, 120 30, 120 70 Z" fill="#E96835" stroke="#101B3A" stroke-width="2" />
+    <line x1="100" y1="10" x2="100" y2="0" stroke="#101B3A" stroke-width="2" />
+    <!-- Flanking Minarets -->
+    <rect x="10" y="30" width="14" height="120" fill="#E5C39E" stroke="#101B3A" stroke-width="2" />
+    <rect x="176" y="30" width="14" height="120" fill="#E5C39E" stroke="#101B3A" stroke-width="2" />
+    <path d="M10 30 Q17 15 24 30 Z" fill="#E96835" stroke="#101B3A" stroke-width="1.5" />
+    <path d="M176 30 Q183 15 190 30 Z" fill="#E96835" stroke="#101B3A" stroke-width="1.5" />
+  </g>
+
+  <!-- Lotus Temple Petals (Right) -->
+  <g transform="translate(730, 90)">
+    <path d="M80 140 C50 110, 50 60, 80 30 C110 60, 110 110, 80 140 Z" fill="#FFFCF7" stroke="#101B3A" stroke-width="2.5" />
+    <path d="M50 140 C20 120, 25 80, 50 50 C70 80, 70 120, 50 140 Z" fill="#F7F2E9" stroke="#101B3A" stroke-width="2" />
+    <path d="M110 140 C140 120, 135 80, 110 50 C90 80, 90 120, 110 140 Z" fill="#F7F2E9" stroke="#101B3A" stroke-width="2" />
+  </g>
+
+  <!-- Subtle Foliage Canopy -->
+  <circle cx="40" cy="220" r="25" fill="#16764C" fill-opacity="0.3" />
+  <circle cx="700" cy="220" r="28" fill="#16764C" fill-opacity="0.3" />
+  <circle cx="940" cy="220" r="32" fill="#16764C" fill-opacity="0.3" />
+</svg>
+

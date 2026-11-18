@@ -1,9 +1,10 @@
 # YATRA — Visual Asset & Image Generation Inventory
 
-**Document Version:** 1.0.0  
+**Document Version:** 2.0.0  
 **Design System:** Editorial Warm Ivory / Delhi Transit Heritage  
 **Status:** Ready for Studio Art Production  
 **Lead Designer & Architect:** Senior Design Technologist & Visual Lead  
+**Quick Placement Guide:** See [IMAGE_PLACEMENT_MAP.md](file:///c:/Users/mustafa/Desktop/Yatra/docs/design/IMAGE_PLACEMENT_MAP.md) for the exact screen, code file, line number, and disk folder for every image.  
 
 ---
 

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="600" height="320" fill="none">
+  <!-- Subtle Soft Drop Shadow -->
+  <ellipse cx="300" cy="295" rx="270" ry="18" fill="#101B3A" fill-opacity="0.12" />
+
+  <!-- Modern Delhi Electric Low-Floor Bus Isometric / Elevation -->
+  <!-- Main Bus Body -->
+  <rect x="30" y="50" width="540" height="200" rx="24" fill="#16764C" stroke="#101B3A" stroke-width="4" />
+  
+  <!-- Lower Skirt Panel -->
+  <rect x="30" y="180" width="540" height="70" rx="12" fill="#0E5234" />
+  
+  <!-- Front Windshield -->
+  <path d="M480 65 H540 C555 65 562 75 562 95 V170 H480 Z" fill="#E4F1E5" stroke="#101B3A" stroke-width="3" />
+
+  <!-- Route Matrix Destination Sign -->
+  <rect x="220" y="18" width="220" height="34" rx="6" fill="#0B132B" stroke="#101B3A" stroke-width="2" />
+  <text x="240" y="41" font-family="'Inter', sans-serif" font-size="16" font-weight="bold" fill="#FACC15">502 KASHMERE GATE</text>
+
+  <!-- Passenger Windows -->
+  <rect x="60" y="75" width="80" height="75" rx="10" fill="#E4F1E5" stroke="#101B3A" stroke-width="2" />
+  <rect x="155" y="75" width="80" height="75" rx="10" fill="#E4F1E5" stroke="#101B3A" stroke-width="2" />
+  <rect x="250" y="75" width="80" height="75" rx="10" fill="#E4F1E5" stroke="#101B3A" stroke-width="2" />
+  <rect x="345" y="75" width="80" height="75" rx="10" fill="#E4F1E5" stroke="#101B3A" stroke-width="2" />
+
+  <!-- Dual Low-Floor Boarding Doors with Deployed Neon Ramp -->
+  <rect x="245" y="120" width="90" height="130" fill="#CBD5E1" stroke="#101B3A" stroke-width="2.5" />
+  <line x1="290" y1="120" x2="290" y2="250" stroke="#101B3A" stroke-width="2" />
+  
+  <!-- Deployed Wheelchair Ramp at Kerb Height -->
+  <polygon points="230,250 350,250 370,270 210,270" fill="#FACC15" stroke="#101B3A" stroke-width="3" />
+  <line x1="220" y1="260" x2="360" y2="260" stroke="#101B3A" stroke-width="2" stroke-dasharray="8 6" />
+
+  <!-- International Symbol of Access (ISA) Decal -->
+  <circle cx="205" cy="210" r="18" fill="#172653" />
+  <circle cx="205" cy="203" r="3" fill="#FFFFFF" />
+  <path d="M205 208 V215 H210 M202 214 A5 5 0 1 0 207 219" stroke="#FFFFFF" stroke-width="2" fill="none" stroke-linecap="round" />
+
+  <!-- Wheel Wells & Heavy Duty Transit Tyres -->
+  <circle cx="120" cy="250" r="42" fill="#101B3A" stroke="#FFFFFF" stroke-width="4" />
+  <circle cx="120" cy="250" r="18" fill="#CBD5E1" stroke="#101B3A" stroke-width="2" />
+
+  <circle cx="470" cy="250" r="42" fill="#101B3A" stroke="#FFFFFF" stroke-width="4" />
+  <circle cx="470" cy="250" r="18" fill="#CBD5E1" stroke="#101B3A" stroke-width="2" />
+
+  <!-- Headlights & Chrome Bumper Accent -->
+  <rect x="560" y="190" width="12" height="24" rx="4" fill="#FACC15" />
+  <rect x="540" y="235" width="28" height="10" rx="3" fill="#E2E8F0" />
+</svg>
+
