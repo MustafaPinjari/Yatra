@@ -129,3 +129,4 @@ class YatraTypography {
 - Interactive tap targets strictly adhere to minimum dimensions of `48 × 48 dp`.
 - High-contrast text exceeds WCAG AAA ratio (`> 7:1`) on `#F7F2E9` backgrounds.
 - Screen reader accessibility toggles dynamically expand descriptive text.
+

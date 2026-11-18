@@ -33,3 +33,4 @@ class YatraColors {
   static const Color softBorder = Color(0xFFE6DDD0);
   static const Color darkBorder = Color(0xFF101B3A);
 }
+

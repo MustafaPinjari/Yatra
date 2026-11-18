@@ -205,3 +205,4 @@ class TripHistoryScreen extends StatelessWidget {
     );
   }
 }
+

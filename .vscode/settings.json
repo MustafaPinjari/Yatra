@@ -1,0 +1,14 @@
+{
+  "solidity.packageDefaultDependenciesContractsDirectory": "blockchain/contracts",
+  "solidity.packageDefaultDependenciesDirectory": "blockchain",
+  "solidity.remappings": [
+    "contracts/=blockchain/contracts/",
+    "@contracts/=blockchain/contracts/"
+  ],
+  "solidity.remappingsUnix": [
+    "contracts/=blockchain/contracts/",
+    "@contracts/=blockchain/contracts/"
+  ],
+  "solidity.compileUsingRemoteVersion": "v0.8.24",
+  "solidity.defaultCompiler": "remote"
+}

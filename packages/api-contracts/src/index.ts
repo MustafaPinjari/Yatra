@@ -94,3 +94,4 @@ export interface AccessibleStopDetails {
   last_inspected_date: string;
   trust_ledger_tx?: string;
 }
+

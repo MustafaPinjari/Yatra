@@ -7,3 +7,4 @@ Shared TypeScript schemas, DTOs, and API contracts for YATRA services, frontend 
 - `PlanJourneyRequest`, `RouteItineraryResponse`
 - `LiveVehicleTelemetry`
 - `AccessibleStopDetails`
+

@@ -320,3 +320,4 @@ class _FeatureBadge extends StatelessWidget {
     );
   }
 }
+

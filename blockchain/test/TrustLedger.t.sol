@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.24;
 
-import "../contracts/TrustLedger.sol";
+import "contracts/TrustLedger.sol";
+import "contracts/ITrustLedger.sol";
 
 contract TrustLedgerTest {
     TrustLedger public ledger;
@@ -43,4 +44,3 @@ contract TrustLedgerTest {
         require(isVerified == false, "Unrecorded hash must return false");
     }
 }
-

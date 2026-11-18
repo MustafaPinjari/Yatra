@@ -102,3 +102,4 @@ The official YATRA logo integrates two resonant symbols:
 2. **Color Contrast:** Text and critical UI controls must satisfy at least WCAG Level AA (`4.5:1` for normal text, `3:1` for large text). Text in `#101B3A` against `#F7F2E9` achieves `14.8:1` (exceeding AAA).
 3. **Screen Reader Semantics:** Every interactive button, selector, card, and map marker must carry descriptive `Semantics` in Flutter and `aria-label` / semantic HTML tags in Next.js.
 4. **Haptic & Visual Redundancy:** Operational alerts (such as boarding handshake confirmation) must never rely on color alone; always pair color with text badges, high-contrast icons, and auditory/haptic cues.
+

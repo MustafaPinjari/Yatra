@@ -84,3 +84,4 @@ The Next.js web application is built strictly for **desktop and tablet operation
 ```
 
 Each page utilizes high-density data tables, accessible modal dialogues, and responsive desktop grid layouts (12-column layout on `>= 1280px`).
+

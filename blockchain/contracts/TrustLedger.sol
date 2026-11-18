@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.24;
 
-import "./ITrustLedger.sol";
+import "contracts/ITrustLedger.sol";
 
 /**
  * @title TrustLedger

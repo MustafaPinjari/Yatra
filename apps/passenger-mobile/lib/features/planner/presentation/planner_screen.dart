@@ -400,3 +400,4 @@ class _ItineraryCard extends StatelessWidget {
     );
   }
 }
+
