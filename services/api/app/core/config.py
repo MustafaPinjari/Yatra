@@ -39,6 +39,14 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = Field(default="")
     GEMINI_MODEL: str = "gemini-2.5-flash"
 
+    # Delhi Transport Stack (DTS) Integrations
+    DTS_GTFS_STATIC_URL: str = Field(default="")
+    DTS_GTFS_RT_API_ENDPOINT: str = Field(default="")
+    DTS_GTFS_RT_API_KEY: str = Field(default="")
+    DTS_GTFS_RT_POLL_INTERVAL_SECONDS: int = 15
+    DATA_DIR: str = "./data"
+    GTFS_DIR: str = "./data/gtfs"
+
     # Blockchain (Sepolia)
     ETHEREUM_SEPOLIA_RPC_URL: str = "https://rpc.sepolia.org"
     TRUST_CONTRACT_ADDRESS: str = "0x0000000000000000000000000000000000000000"

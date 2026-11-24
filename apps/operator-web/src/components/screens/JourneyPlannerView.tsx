@@ -55,14 +55,14 @@ export function JourneyPlannerView() {
     <div className="max-w-2xl mx-auto p-4 sm:p-6 space-y-6">
       {/* Editorial Heading */}
       <div className="space-y-1">
-        <span className="text-xs font-semibold tracking-wider uppercase text-[#E96835]">
-          Deterministic Travel Intelligence
+        <span className="text-xs font-semibold tracking-wider text-[#E96835]">
+          Multimodal journey routing
         </span>
         <h1 className="font-editorial-serif text-3xl sm:text-4xl font-bold text-[#101B3A]">
-          Plan Accessible Journey
+          Plan accessible journey
         </h1>
         <p className="text-xs text-[#64748B]">
-          Multi-criteria routing balancing travel time, micro-accessibility, and predicted crowding.
+          Multi-criteria routing balancing travel time, step-free accessibility, and relative crowding
         </p>
       </div>
 
@@ -77,7 +77,7 @@ export function JourneyPlannerView() {
           }`}
         >
           <Bus className="h-4 w-4" />
-          <span>Bus Only</span>
+          <span>Bus only</span>
         </button>
         <button
           onClick={() => setTransitMode("METRO")}
@@ -107,8 +107,8 @@ export function JourneyPlannerView() {
       <div className="rounded-xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-4">
         <div className="space-y-3">
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#64748B] mb-1">
-              Origin (Starting Point)
+            <label className="block text-[11px] font-bold text-[#64748B] mb-1">
+              Origin
             </label>
             <input
               type="text"
@@ -119,7 +119,7 @@ export function JourneyPlannerView() {
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-[#64748B] mb-1">
+            <label className="block text-[11px] font-bold text-[#64748B] mb-1">
               Destination
             </label>
             <input
@@ -136,9 +136,9 @@ export function JourneyPlannerView() {
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-xs font-semibold text-[#101B3A]">
               <SlidersHorizontal className="h-3.5 w-3.5 text-[#E96835]" />
-              Accessibility Preferences
+              Accessibility preferences
             </span>
-            <span className="text-[11px] text-[#64748B]">Filter Active</span>
+            <span className="text-[11px] text-[#64748B]">Filter active</span>
           </div>
 
           <div className="flex flex-wrap gap-2 pt-1">
@@ -151,7 +151,7 @@ export function JourneyPlannerView() {
               }`}
             >
               <CheckCircle2 className="h-3.5 w-3.5" />
-              <span>Wheelchair Ramp Required</span>
+              <span>Wheelchair ramp required</span>
             </button>
 
             <button
@@ -163,7 +163,7 @@ export function JourneyPlannerView() {
               }`}
             >
               <Users className="h-3.5 w-3.5" />
-              <span>Low Crowding Priority</span>
+              <span>Low crowding priority</span>
             </button>
           </div>
         </div>
@@ -171,15 +171,15 @@ export function JourneyPlannerView() {
 
       {/* Recommended Route Section with Large Editorial Numerals */}
       <div className="rounded-2xl border-2 border-[#16764C]/30 bg-[#FFFCF7] p-6 shadow-editorial relative overflow-hidden">
-        <div className="absolute top-0 right-0 bg-[#16764C] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-bl-lg">
-          Optimal Accessible Path
+        <div className="absolute top-0 right-0 bg-[#16764C] text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg">
+          Fastest accessible route
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
           <div>
             <div className="flex items-center gap-2">
               <span className="rounded bg-[#172653] px-2.5 py-1 text-sm font-bold text-white">
-                ROUTE {recommendedRoute.routeNumber}
+                Route {recommendedRoute.routeNumber}
               </span>
               <span className="text-xs font-semibold text-[#16764C] flex items-center gap-1">
                 <Accessibility className="h-4 w-4" /> {recommendedRoute.rampStatus}
@@ -192,7 +192,7 @@ export function JourneyPlannerView() {
 
           {/* Large Serif Numerals */}
           <div className="text-left sm:text-right mt-2 sm:mt-0">
-            <span className="font-editorial-serif text-5xl font-black text-[#101B3A]">
+            <span className="font-editorial-serif text-5xl font-black text-[#101B3A] tabular-nums">
               {recommendedRoute.duration}
             </span>
             <span className="font-editorial-serif text-xl font-normal text-[#64748B] ml-1">
@@ -205,23 +205,23 @@ export function JourneyPlannerView() {
         <div className="mt-5 grid grid-cols-3 gap-2 pt-4 border-t border-[#E6DDD0] text-center text-xs">
           <div>
             <p className="text-[#64748B]">Departure</p>
-            <p className="font-bold text-[#101B3A]">{recommendedRoute.departure}</p>
+            <p className="font-bold text-[#101B3A] tabular-nums">{recommendedRoute.departure}</p>
           </div>
           <div className="border-x border-[#E6DDD0]">
-            <p className="text-[#64748B]">Predicted Crowding</p>
+            <p className="text-[#64748B]">Crowding index</p>
             <p className="font-bold text-[#16764C]">{recommendedRoute.crowdingTier}</p>
           </div>
           <div>
             <p className="text-[#64748B]">Arrival</p>
-            <p className="font-bold text-[#101B3A]">{recommendedRoute.arrival}</p>
+            <p className="font-bold text-[#101B3A] tabular-nums">{recommendedRoute.arrival}</p>
           </div>
         </div>
       </div>
 
       {/* Alternative Routes */}
       <div className="space-y-2.5">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-[#64748B]">
-          Alternative Travel Options
+        <h2 className="text-xs font-bold text-[#64748B]">
+          Alternative routes
         </h2>
         {alternativeRoutes.map((alt) => (
           <div
@@ -242,10 +242,10 @@ export function JourneyPlannerView() {
               </p>
             </div>
             <div className="text-right">
-              <span className="font-editorial-serif text-xl font-bold text-[#101B3A]">
+              <span className="font-editorial-serif text-xl font-bold text-[#101B3A] tabular-nums">
                 {alt.duration}
               </span>
-              <p className="text-[11px] text-[#64748B]">{alt.fare}</p>
+              <p className="text-[11px] text-[#64748B] tabular-nums">{alt.fare}</p>
             </div>
           </div>
         ))}

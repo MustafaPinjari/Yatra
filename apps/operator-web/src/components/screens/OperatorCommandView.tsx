@@ -130,10 +130,22 @@ export function OperatorCommandView() {
                 className="rounded-xl border border-slate-800 bg-slate-900/60 p-3.5 space-y-1 shadow-sm"
               >
                 <p className="text-[11px] text-slate-400">{kpi.label}</p>
-                <p className="font-editorial-serif text-2xl font-bold text-white">{kpi.value}</p>
+                <p className="font-editorial-serif text-2xl font-bold text-white tabular-nums">{kpi.value}</p>
                 <p className="text-[10px] text-slate-400">{kpi.sub}</p>
               </div>
             ))}
+          </div>
+
+          {/* Real-time Choke Point Banner (Problem 5) */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="font-semibold text-white">Route 502 segment load bottleneck</span>
+              <span className="text-slate-400">· Red Fort to Delhi Gate at 96% capacity (58 / 60)</span>
+            </div>
+            <span className="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800/60">
+              Relief bus recommended
+            </span>
           </div>
         </div>
 

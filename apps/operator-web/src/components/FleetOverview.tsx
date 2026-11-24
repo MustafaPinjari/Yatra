@@ -1,5 +1,7 @@
-import React from "react";
-import { Users, Accessibility, ArrowRight } from "lucide-react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { Users, Accessibility, ArrowRight, Radio, CheckCircle2 } from "lucide-react";
 
 interface RouteStatus {
   routeNumber: string;
@@ -11,7 +13,24 @@ interface RouteStatus {
   headwayMinutes: number;
 }
 
-const sampleRoutes: RouteStatus[] = [
+interface LiveVehicleItem {
+  vehicleId: string;
+  registrationNumber: string;
+  routeId: string;
+  routeShortName: string;
+  coordinates: { latitude: number; longitude: number };
+  speedKmh: number;
+  bearing: number;
+  crowdingTier: string;
+  occupancyPercentage: number;
+  isLowFloor: boolean;
+  hasOperationalRamp: boolean;
+  isStale: boolean;
+  freshnessSeconds: number;
+  lastUpdated: string;
+}
+
+const defaultRoutes: RouteStatus[] = [
   {
     routeNumber: "502",
     routeName: "Kashmere Gate ISBT ⟷ Mehrauli Terminal",
@@ -42,6 +61,32 @@ const sampleRoutes: RouteStatus[] = [
 ];
 
 export function FleetOverview() {
+  const [liveVehicles, setLiveVehicles] = useState<LiveVehicleItem[]>([]);
+  const [feedStatus, setFeedStatus] = useState<string>("Connecting...");
+  const [lastRefreshed, setLastRefreshed] = useState<string>("");
+
+  useEffect(() => {
+    async function fetchFleet() {
+      try {
+        const res = await fetch("http://localhost:8000/api/v1/operator/fleet/live");
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) {
+            setLiveVehicles(json.data);
+            setFeedStatus("GTFS-RT Active");
+            setLastRefreshed(new Date().toLocaleTimeString());
+          }
+        }
+      } catch {
+        setFeedStatus("Schedule Baseline");
+      }
+    }
+
+    fetchFleet();
+    const interval = setInterval(fetchFleet, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
   const getCrowdingStyle = (tier: string) => {
     switch (tier) {
       case "LOW":
@@ -76,16 +121,66 @@ export function FleetOverview() {
             </p>
           </div>
         </div>
-        <span className="rounded-md bg-[#FAF5EE] border border-[#E6DDD0] px-2.5 py-1 text-xs font-medium text-[#172653]">
-          3 active corridors
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-1 text-[11px] font-semibold text-emerald-800">
+            <Radio className="h-3 w-3 text-emerald-600 animate-pulse" />
+            <span>{feedStatus}</span>
+          </span>
+          {lastRefreshed && (
+            <span className="text-[11px] text-slate-500 font-mono">
+              {lastRefreshed}
+            </span>
+          )}
+        </div>
       </div>
 
+      {/* Live Fleet Telemetry Strip if vehicles present */}
+      {liveVehicles.length > 0 && (
+        <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-200">
+          <div className="flex items-center justify-between pb-2">
+            <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+              Live bus positions ({liveVehicles.length} reporting)
+            </span>
+            <span className="text-[11px] text-slate-500">
+              Source: Delhi Transport Stack GTFS-RT
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1">
+            {liveVehicles.map((v) => (
+              <div
+                key={v.vehicleId}
+                className="flex items-center justify-between p-2 rounded bg-white border border-slate-200 text-xs shadow-2xs"
+              >
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono font-bold text-slate-900">{v.vehicleId}</span>
+                    <span className="rounded bg-indigo-50 border border-indigo-200 px-1 py-0.2 text-[10px] font-bold text-indigo-700">
+                      Route {v.routeShortName}
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">
+                    Speed: {v.speedKmh} km/h · {v.freshnessSeconds}s ago
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${
+                    v.isLowFloor ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-slate-100 text-slate-600"
+                  }`}>
+                    {v.isLowFloor ? "Low Floor" : "Standard"}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="mt-4 space-y-3">
-        {sampleRoutes.map((route) => (
+        {defaultRoutes.map((route) => (
           <div
             key={route.routeNumber}
-            className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border border-slate-200 p-4 hover:border-slate-300 transition-colors gap-3"
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between rounded-lg border border-slate-200 p-4 hover:border-slate-300 transition-colors gap-3 bg-white"
           >
             <div className="space-y-1">
               <div className="flex items-center gap-2">
