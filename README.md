@@ -6,43 +6,43 @@ YATRA is an open-source, universal public transit accessibility, operations, and
 
 ---
 
-## 1. Product Overview & Vision
+## 1. Product overview and vision
 
-Public bus transit is the lifeline of megacities like Delhi, carrying millions of daily commuters. However, passengers with disabilities, the elderly, parents with strollers, and unfamiliar commuters encounter severe friction:
-- Inaccessible bus stops and curbs with no prior accessibility intelligence.
-- Inability to signal bus drivers before boarding, resulting in buses stopping away from ramps or failing to lower kneeling mechanisms.
-- Extreme bus crowding without real-time transparency or occupancy forecasting.
-- Drivers lacking situational awareness of boarding passengers needing assistance.
-- Transport authorities lacking verifiable inspection and resolution auditing.
+Municipal bus transit provides vital connectivity for Delhi, accommodating over 4 million daily journeys. However, passengers with mobility impairments, elderly commuters, and people traveling with strollers frequently encounter operational friction:
+- Inaccessible bus stops and curbs with no advance accessibility ratings.
+- Inability to notify approaching bus drivers of boarding requirements, resulting in buses stopping away from ramps or failing to lower kneeling mechanisms.
+- Unpredictable bus crowding without real-time occupancy indicators.
+- Drivers lacking advance notice of boarding passengers who require wheelchair ramps or assistance.
+- Transport authorities lacking verifiable inspection and maintenance records.
 
-**YATRA** bridges this gap by unifying five core user groups on an accessible, real-time, privacy-preserving infrastructure.
+**YATRA** addresses these bottlenecks by linking five user groups with shared, real-time accessibility and operational data.
 
 ---
 
-## 2. Five User Groups
+## 2. User groups
 
-| User Group | Platform Interface | Value Proposition |
+| User group | Platform interface | Capabilities |
 | :--- | :--- | :--- |
-| **1. Commuters & Passengers** | Universal Passenger App (`apps/passenger-mobile`) | Crowding-aware trip planning, live arrival tracking, multimodal routing. |
-| **2. Drivers & Conductors** | DriverAssist App (`apps/driver-mobile`) | Audio/visual pre-stop boarding handshake, accessibility assistance alerts. |
-| **3. Operators & Dispatchers** | Operator Command (`apps/operator-web`) | Fleet telemetry, crowding monitoring, accessibility incident resolution. |
-| **4. Passengers with Disabilities** | Universal Passenger App (A11y Mode) | High-contrast/screen-reader UI, wheelchair ramp requests, audio assistance. |
-| **5. Transport Authorities** | Government Intelligence | Aggregated compliance metrics, verifiable audit trails, corridor analytics. |
+| **1. Commuters and daily passengers** | Universal Passenger App (`apps/passenger-mobile`) | Step-free route planning, live bus arrival telemetry, crowding indicators. |
+| **2. Drivers and conductors** | DriverAssist console (`apps/driver-mobile`) | Pre-stop boarding assistance alerts, stop accessibility guidance. |
+| **3. Operators and dispatchers** | Operator Command (`apps/operator-web`) | Fleet telemetry, crowding monitoring, accessibility incident triage. |
+| **4. Passengers with disabilities** | Universal Passenger App (A11y mode) | High-contrast layout, screen-reader semantics, ramp boarding handshakes. |
+| **5. Transport authorities** | Municipal Intelligence (`apps/operator-web`) | Aggregated compliance metrics, verifiable audit trails, corridor performance. |
 
 ---
 
-## 3. Core Product Modules
+## 3. Core modules
 
-- **AccessGraph**: Pedestrian and bus-stop accessibility graph mapping curb cuts, ramps, tactile paving, and shelter amenities.
-- **AccessHandshake**: Real-time WebSocket/Redis-backed signaling protocol connecting waiting passengers with approaching bus drivers.
-- **DriverAssist**: Hands-free, high-contrast operational driver console delivering audio/visual stop alerts.
-- **Operator Command**: Next.js desktop dispatch dashboard for monitoring fleet health, resolving accessibility incidents, and managing routes.
-- **Crowd Intelligence**: Deterministic and machine-learning bus crowding estimation engine utilizing Delhi GPS telemetry and e-ticketing data.
-- **Trust Ledger**: Ethereum Sepolia smart contract anchoring cryptographic audit hashes for accessibility inspections and resolved service tickets without storing sensitive PII on-chain.
+- **AccessGraph**: Stop and pedestrian path accessibility graph recording curb cuts, ramps, tactile paving, and shelter amenities.
+- **AccessHandshake**: Real-time WebSocket signaling protocol connecting waiting passengers with approaching bus crews.
+- **DriverAssist**: High-contrast operational driver console delivering audio and visual stop alerts.
+- **Operator Command**: Desktop operations console for monitoring fleet status, managing boarding queues, and resolving maintenance tickets.
+- **Crowd Intelligence**: Headway and telemetry-based crowding estimation using Delhi transit telemetry and electronic ticketing data.
+- **Trust Ledger**: Ethereum Sepolia smart contract anchoring cryptographic audit hashes for accessibility inspections and resolved service tickets without storing personal data on-chain.
 
 ---
 
-## 4. Architecture Summary
+## 4. Architecture summary
 
 ```mermaid
 flowchart TD
@@ -86,7 +86,7 @@ flowchart TD
 
 ---
 
-## 5. Repository Structure
+## 5. Repository structure
 
 ```
 yatra/
@@ -144,7 +144,7 @@ yatra/
 
 ---
 
-## 6. Development Prerequisites
+## 6. Development prerequisites
 
 - **Python**: 3.12+ (isolated `.venv`)
 - **Node.js**: 20+ (with npm 10+)
@@ -154,7 +154,7 @@ yatra/
 
 ---
 
-## 7. Quickstart Commands
+## 7. Quickstart commands
 
 ```bash
 # 1. Clone repository
@@ -185,17 +185,17 @@ npm run dev
 
 ---
 
-## 8. Development Status
+## 8. Development status
 
-| Component | Status | Target Milestone |
+| Component | Status | Target milestone |
 | :--- | :--- | :--- |
-| Monorepo Architecture | :white_check_mark: Complete | Foundation |
-| Core Documentation & Specs | :white_check_mark: Complete | Foundation |
-| FastAPI Backend Core & Health | :white_check_mark: Complete | Phase 1 Prototype |
-| Operator Web Dashboard | :white_check_mark: Initialized | Phase 1 Prototype |
-| Passenger Mobile Application | :hammer_and_wrench: Initializing | Phase 1 Prototype |
-| Driver Assist Mobile Application | :hammer_and_wrench: Initializing | Phase 1 Prototype |
-| PostGIS Spatial Schemas | :white_check_mark: Documented | Phase 1 Prototype |
-| Crowd Intelligence Engine | :memo: Scaffolding | Phase 1 Prototype |
-| Trust Ledger Contract | :white_check_mark: Initialized | Phase 2 Audit |
+| Monorepo architecture | :white_check_mark: Complete | Foundation |
+| Core documentation and specifications | :white_check_mark: Complete | Foundation |
+| FastAPI backend core and health | :white_check_mark: Complete | Phase 1 prototype |
+| Operator web dashboard | :white_check_mark: Implemented | Phase 1 prototype |
+| Passenger mobile application | :white_check_mark: Implemented | Phase 1 prototype |
+| Driver assist mobile application | :hammer_and_wrench: Initializing | Phase 1 prototype |
+| PostGIS spatial schemas | :white_check_mark: Documented | Phase 1 prototype |
+| Crowd intelligence engine | :memo: Scaffolding | Phase 1 prototype |
+| Trust ledger contract | :white_check_mark: Initialized | Phase 2 audit |
 

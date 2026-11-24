@@ -14,10 +14,10 @@ import {
 
 export function OperatorCommandView() {
   const kpis = [
-    { label: "Active Buses", value: "48", sub: "38 Low-Floor (79%)", status: "normal" },
-    { label: "Fleet Occupancy", value: "62%", sub: "4 buses > 85% load", status: "warning" },
-    { label: "Live Handshakes", value: "3", sub: "Avg ack: 18 seconds", status: "normal" },
-    { label: "On-Time Headway", value: "94.2%", sub: "Target 90% reached", status: "good" },
+    { label: "Active buses", value: "48", sub: "38 low-floor (79%)", status: "normal" },
+    { label: "Fleet occupancy", value: "62%", sub: "4 buses > 85% load", status: "warning" },
+    { label: "Live handshakes", value: "3", sub: "Avg ack: 18 seconds", status: "normal" },
+    { label: "On-time headway", value: "94.2%", sub: "Target 90% reached", status: "good" },
   ];
 
   const liveQueue = [
@@ -26,7 +26,7 @@ export function OperatorCommandView() {
       route: "502",
       stop: "AIIMS South Gate",
       priority: "CRITICAL",
-      type: "Wheelchair Ramp",
+      type: "Wheelchair ramp",
       bus: "DL 1PD 4421",
       driver: "Rajesh (ID: 8821)",
       time: "1m ago",
@@ -37,7 +37,7 @@ export function OperatorCommandView() {
       route: "TMS(+)",
       stop: "Kashmere Gate ISBT",
       priority: "HIGH",
-      type: "Vision Guide Assistance",
+      type: "Vision guide assistance",
       bus: "DL 1PC 8902",
       driver: "M. Khan (ID: 4190)",
       time: "3m ago",
@@ -48,7 +48,7 @@ export function OperatorCommandView() {
       route: "534",
       stop: "Nehru Place Terminal",
       priority: "NORMAL",
-      type: "Elderly Extra Time",
+      type: "Elderly extra time",
       bus: "DL 1PD 3311",
       driver: "S. Pal (ID: 9012)",
       time: "6m ago",
@@ -64,27 +64,27 @@ export function OperatorCommandView() {
           <YatraBrandLogo size="md" variant="light" />
 
           <div className="pt-2">
-            <span className="text-[10px] font-bold tracking-widest uppercase text-slate-400">
-              Operations Control
+            <span className="text-xs font-semibold text-slate-400">
+              Operations control
             </span>
             <nav className="mt-3 space-y-1 text-xs">
               <a href="#map" className="flex items-center gap-2.5 rounded-lg bg-indigo-600/30 text-indigo-300 font-semibold px-3 py-2 border border-indigo-500/30">
                 <Layers className="h-4 w-4" />
-                <span>Live Fleet Map</span>
+                <span>Live fleet map</span>
               </a>
               <a href="#queue" className="flex items-center gap-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 px-3 py-2 transition-colors">
                 <Radio className="h-4 w-4 text-[#E96835]" />
-                <span>Assistance Queue</span>
+                <span>Assistance queue</span>
                 <span className="ml-auto rounded-full bg-[#E96835] text-white text-[10px] font-bold px-1.5">3</span>
               </a>
               <a href="#incidents" className="flex items-center gap-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 px-3 py-2 transition-colors">
                 <AlertTriangle className="h-4 w-4 text-amber-400" />
-                <span>Active Incidents</span>
+                <span>Active incidents</span>
                 <span className="ml-auto rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold px-1.5">2</span>
               </a>
               <a href="#trust" className="flex items-center gap-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 px-3 py-2 transition-colors">
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                <span>Trust Ledger Audits</span>
+                <span>Trust ledger audits</span>
               </a>
             </nav>
           </div>
@@ -92,12 +92,12 @@ export function OperatorCommandView() {
 
         {/* Live Controller Status */}
         <div className="mt-6 md:mt-0 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400 space-y-1">
-          <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
-            <span>Telemetry Online</span>
+          <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            <span>Telemetry online</span>
           </div>
-          <p>Sector: Delhi South & Central Ring</p>
-          <p className="text-[10px] font-mono text-slate-500">Latency: 142ms (Redis Pub/Sub)</p>
+          <p>Sector: Delhi South and Central Ring</p>
+          <p className="text-[10px] font-mono text-slate-500">Latency: 142ms (Redis)</p>
         </div>
       </aside>
 
@@ -107,17 +107,17 @@ export function OperatorCommandView() {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <span className="text-[10px] font-bold tracking-widest uppercase text-indigo-400">
-                Central Dispatch
+              <span className="text-xs font-semibold text-indigo-400">
+                Central dispatch
               </span>
               <h1 className="font-editorial-serif text-2xl sm:text-3xl font-bold text-white">
-                Network Operations Center
+                Network Operations Centre
               </h1>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-3 py-1 text-xs font-semibold flex items-center gap-1.5">
-                <Activity className="h-3.5 w-3.5" /> Normal Fleet Headway
+              <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-3 py-1 text-xs font-medium flex items-center gap-1.5">
+                <Activity className="h-3.5 w-3.5" /> Normal fleet headway
               </span>
             </div>
           </div>
@@ -129,7 +129,7 @@ export function OperatorCommandView() {
                 key={kpi.label}
                 className="rounded-xl border border-slate-800 bg-slate-900/60 p-3.5 space-y-1 shadow-sm"
               >
-                <p className="text-[11px] text-slate-400 uppercase tracking-wider">{kpi.label}</p>
+                <p className="text-[11px] text-slate-400">{kpi.label}</p>
                 <p className="font-editorial-serif text-2xl font-bold text-white">{kpi.value}</p>
                 <p className="text-[10px] text-slate-400">{kpi.sub}</p>
               </div>
@@ -210,20 +210,20 @@ export function OperatorCommandView() {
         {/* 4. Priority Assistance Queue Table */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-300">
-              Live Assistance Handshake Queue
+            <h2 className="text-xs font-semibold text-slate-300">
+              Live assistance handshake queue
             </h2>
-            <span className="text-[11px] text-slate-400 font-mono">Real-Time WebSocket Stream</span>
+            <span className="text-[11px] text-slate-400 font-mono">Real-time WebSocket stream</span>
           </div>
 
           <div className="rounded-xl border border-slate-800 bg-slate-900/70 overflow-x-auto">
             <table className="w-full text-left text-xs text-slate-300">
-              <thead className="border-b border-slate-800 bg-slate-900/90 text-[10px] font-bold uppercase text-slate-400">
+              <thead className="border-b border-slate-800 bg-slate-900/90 text-[10px] font-semibold text-slate-400">
                 <tr>
                   <th className="px-3.5 py-2.5">Priority</th>
-                  <th className="px-3.5 py-2.5">Route & Stop</th>
-                  <th className="px-3.5 py-2.5">Assistance Type</th>
-                  <th className="px-3.5 py-2.5">Bus & Driver</th>
+                  <th className="px-3.5 py-2.5">Route and stop</th>
+                  <th className="px-3.5 py-2.5">Assistance type</th>
+                  <th className="px-3.5 py-2.5">Bus and driver</th>
                   <th className="px-3.5 py-2.5">Status</th>
                   <th className="px-3.5 py-2.5 text-right">Elapsed</th>
                 </tr>

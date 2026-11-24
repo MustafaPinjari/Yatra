@@ -65,20 +65,20 @@ export function AssistanceRequestsTable() {
     switch (status) {
       case "ACKNOWLEDGED":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-            <CheckCircle2 className="h-3 w-3" /> Driver Acknowledged
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
+            <CheckCircle2 className="h-3 w-3" /> Driver acknowledged
           </span>
         );
       case "PENDING":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-800">
-            <Clock className="h-3 w-3 animate-spin" /> Awaiting Acknowledgment
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">
+            <Clock className="h-3 w-3" /> Awaiting acknowledgment
           </span>
         );
       case "BOARDING":
         return (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
-            <AlertCircle className="h-3 w-3" /> Boarding in Progress
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+            <AlertCircle className="h-3 w-3" /> Boarding in progress
           </span>
         );
       default:
@@ -100,27 +100,27 @@ export function AssistanceRequestsTable() {
           </div>
           <div>
             <h2 className="text-lg font-bold font-editorial-serif text-[#101B3A]">
-              Live AccessHandshake Assistance Queue
+              Live boarding assistance queue
             </h2>
             <p className="text-xs text-[#64748B]">
-              Real-time boarding assistance alerts synchronized via Redis between passenger mobile and driver consoles
+              Real-time boarding assistance alerts synchronised between passenger devices and driver consoles
             </p>
           </div>
         </div>
-        <span className="rounded-md bg-[#FAF5EE] border border-[#E6DDD0] px-2.5 py-1 text-xs font-semibold text-[#172653]">
-          Showing 3 Live Requests
+        <span className="rounded-md bg-[#FAF5EE] border border-[#E6DDD0] px-2.5 py-1 text-xs font-medium text-[#172653]">
+          3 active requests
         </span>
       </div>
 
       <div className="mt-4 overflow-x-auto">
         <table className="w-full text-left text-sm text-slate-600">
-          <thead className="bg-slate-50 text-xs font-semibold uppercase text-slate-500">
+          <thead className="bg-slate-50 text-xs font-medium text-slate-500">
             <tr>
-              <th scope="col" className="px-4 py-3">Request ID & Route</th>
-              <th scope="col" className="px-4 py-3">Bus Stop</th>
-              <th scope="col" className="px-4 py-3">Assistance Required</th>
-              <th scope="col" className="px-4 py-3">Assigned Vehicle</th>
-              <th scope="col" className="px-4 py-3">Handshake Status</th>
+              <th scope="col" className="px-4 py-3">Request ID and route</th>
+              <th scope="col" className="px-4 py-3">Bus stop</th>
+              <th scope="col" className="px-4 py-3">Assistance required</th>
+              <th scope="col" className="px-4 py-3">Assigned vehicle</th>
+              <th scope="col" className="px-4 py-3">Status</th>
               <th scope="col" className="px-4 py-3">Time</th>
             </tr>
           </thead>

@@ -65,8 +65,8 @@ export function GovtIntelligenceView() {
         {/* 2. Four Headline Analytical Metrics (Large Serif Numerals) */}
         <section aria-label="Core Municipal Metrics" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-              Network Reliability
+            <span className="text-xs font-medium text-[#64748B]">
+              Network reliability
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">94.2</span>
@@ -78,40 +78,40 @@ export function GovtIntelligenceView() {
           </div>
 
           <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-              AccessGraph Rating
+            <span className="text-xs font-medium text-[#64748B]">
+              AccessGraph rating
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">87.4</span>
               <span className="text-xs font-semibold text-[#64748B]">/100</span>
             </div>
             <p className="text-[11px] text-[#64748B]">
-              420 Stops Audited & Scored
+              420 stops audited
             </p>
           </div>
 
           <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-              Daily Ridership
+            <span className="text-xs font-medium text-[#64748B]">
+              Daily ridership
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-editorial-serif text-4xl font-bold text-[#101B3A]">4.28</span>
               <span className="font-editorial-serif text-xl font-normal text-[#101B3A]">M</span>
             </div>
             <p className="text-[11px] text-[#64748B]">
-              ETM Electronic Ticket Validation
+              Electronic ticket validations
             </p>
           </div>
 
           <div className="rounded-yatra-card border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial space-y-2">
-            <span className="text-xs font-semibold text-[#64748B] uppercase tracking-wider">
-              Assistance Fulfilled
+            <span className="text-xs font-medium text-[#64748B]">
+              Assistance fulfilled
             </span>
             <div className="flex items-baseline gap-1">
               <span className="font-editorial-serif text-4xl font-bold text-[#E96835]">1,420</span>
             </div>
             <p className="text-[11px] text-[#16764C] font-semibold flex items-center gap-1">
-              <CheckCircle2 className="h-3.5 w-3.5" /> 98.6% Completion Rate
+              <CheckCircle2 className="h-3.5 w-3.5" /> 98.6% completion rate
             </p>
           </div>
         </section>
@@ -127,8 +127,8 @@ export function GovtIntelligenceView() {
               </h2>
               <p className="text-xs text-[#64748B]">Physical infrastructure audit across 15 transit corridors</p>
             </div>
-            <span className="rounded bg-[#E4F1E5] px-2 py-0.5 text-xs font-bold text-[#16764C]">
-              WCAG 2.2 AA Target
+            <span className="rounded bg-[#E4F1E5] px-2 py-0.5 text-xs font-medium text-[#16764C]">
+              WCAG 2.2 AA target
             </span>
           </div>
 
@@ -198,10 +198,10 @@ export function GovtIntelligenceView() {
           {/* Chart Legend */}
           <div className="flex items-center justify-between pt-3 border-t border-[#E6DDD0] text-xs">
             <span className="flex items-center gap-2 text-[#101B3A] font-medium">
-              <span className="h-3 w-3 rounded-xs bg-[#E96835]" /> Handshakes Completed
+              <span className="h-3 w-3 rounded-xs bg-[#E96835]" /> Handshakes completed
             </span>
             <span className="text-xs text-[#16764C] font-semibold">
-              98.6% Driver Compliance
+              98.6% completion rate
             </span>
           </div>
         </div>
@@ -215,17 +215,17 @@ export function GovtIntelligenceView() {
           </div>
           <div>
             <h3 className="font-editorial-serif text-lg font-bold text-[#101B3A]">
-              Cryptographic Audit Attestation
+              Cryptographic audit attestation
             </h3>
             <p className="text-xs text-[#64748B]">
-              Every depot ramp maintenance certificate is anchored with SHA-256 to Ethereum Sepolia testnet. Zero PII on-chain.
+              Depot ramp maintenance records are hashed and anchored to Ethereum Sepolia. No personal information is stored on-chain.
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-mono text-xs font-bold text-[#16764C] bg-[#E4F1E5] px-3 py-1.5 rounded-lg border border-[#16764C]/20">
-            Sepolia Block #6,419,203
+          <span className="font-mono text-xs font-semibold text-[#16764C] bg-[#E4F1E5] px-3 py-1.5 rounded-lg border border-[#16764C]/20">
+            Sepolia block #6,419,203
           </span>
         </div>
       </section>

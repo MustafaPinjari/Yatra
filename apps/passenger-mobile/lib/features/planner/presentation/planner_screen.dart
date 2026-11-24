@@ -301,13 +301,13 @@ class _ItineraryCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: const Text(
-                        '★ RECOMMENDED STEP-FREE ROUTE',
+                        'Recommended step-free route',
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10,
                           fontWeight: FontWeight.bold,
                           color: YatraColors.heritageGreen,
-                          letterSpacing: 0.5,
+                          letterSpacing: 0.2,
                         ),
                       ),
                     ),

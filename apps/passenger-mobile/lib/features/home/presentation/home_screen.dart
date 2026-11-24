@@ -68,7 +68,7 @@ class PassengerHomeScreen extends StatelessWidget {
                             const Icon(Icons.location_on, size: 12, color: YatraColors.terracotta),
                             const SizedBox(width: 4),
                             Text(
-                              'NEW DELHI · DTC NETWORK',
+                              'Delhi · DTC network',
                               style: YatraTypography.labelCaps(
                                 fontSize: 9,
                                 color: YatraColors.inkSecondary,
@@ -118,12 +118,12 @@ class PassengerHomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Namaste, Traveler',
+                            'Delhi Transit Network',
                             style: YatraTypography.sectionTitle(fontSize: 20),
                           ),
                           const SizedBox(height: 3),
                           Text(
-                            'Where would you like to travel comfortably today?',
+                            'Search bus routes, stops, and accessible connections across Delhi',
                             style: YatraTypography.bodySans(fontSize: 13, color: YatraColors.inkSecondary),
                           ),
                         ],
@@ -168,7 +168,7 @@ class PassengerHomeScreen extends StatelessWidget {
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          'Search accessible routes or stops...',
+                          'Search routes or stops',
                           style: YatraTypography.bodySans(color: YatraColors.inkMuted),
                         ),
                       ),
@@ -183,7 +183,7 @@ class PassengerHomeScreen extends StatelessWidget {
                             Icon(Icons.accessible, size: 14, color: YatraColors.heritageGreen),
                             SizedBox(width: 4),
                             Text(
-                              'Step-Free',
+                              'Step-free',
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 10,
@@ -206,7 +206,7 @@ class PassengerHomeScreen extends StatelessWidget {
                   Expanded(
                     child: _ActionTile(
                       icon: Icons.alt_route,
-                      title: 'Plan Trip',
+                      title: 'Plan trip',
                       subtitle: 'Step-free routing',
                       badgeColor: YatraColors.terracotta,
                       onTap: () => context.push('/planner'),
@@ -216,7 +216,7 @@ class PassengerHomeScreen extends StatelessWidget {
                   Expanded(
                     child: _ActionTile(
                       icon: Icons.directions_bus,
-                      title: 'Live Buses',
+                      title: 'Live buses',
                       subtitle: 'Real-time GPS',
                       badgeColor: YatraColors.navyDeep,
                       onTap: () => context.push('/tracking'),
@@ -240,7 +240,7 @@ class PassengerHomeScreen extends StatelessWidget {
                   Expanded(
                     child: _ActionTile(
                       icon: Icons.accessible_forward,
-                      title: 'Accessible Stops',
+                      title: 'Accessible stops',
                       subtitle: 'AccessGraph rated',
                       badgeColor: YatraColors.heritageGreen,
                       onTap: () => context.push('/stops'),
@@ -256,7 +256,7 @@ class PassengerHomeScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      'Approaching Low-Floor Bus',
+                      'Approaching low-floor bus',
                       style: YatraTypography.sectionTitle(fontSize: 18),
                     ),
                   ),
@@ -354,13 +354,13 @@ class PassengerHomeScreen extends StatelessWidget {
                         runSpacing: 8,
                         children: [
                           _StatusPill(
-                            label: 'RAMP EQUIPPED',
+                            label: 'Ramp equipped',
                             icon: Icons.check_circle,
                             bgColor: YatraColors.paleGreen,
                             textColor: YatraColors.heritageGreen,
                           ),
                           _StatusPill(
-                            label: 'SEATED CAPACITY',
+                            label: 'Seats available',
                             icon: Icons.people_outline,
                             bgColor: YatraColors.parchmentBg,
                             textColor: YatraColors.inkPrimary,
@@ -370,7 +370,7 @@ class PassengerHomeScreen extends StatelessWidget {
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text('Signal Driver', style: TextStyle(fontWeight: FontWeight.bold)),
+                                Text('Signal driver', style: TextStyle(fontWeight: FontWeight.bold)),
                                 SizedBox(width: 4),
                                 Icon(Icons.arrow_forward_ios, size: 12),
                               ],

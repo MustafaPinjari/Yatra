@@ -113,12 +113,12 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'AccessGraph Intelligence',
+                            'AccessGraph stop rating',
                             style: YatraTypography.sectionTitle(fontSize: 14),
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Every stop rated on physical curb height, tactile guidance, and audio accessibility.',
+                            'Stop ratings based on curb height, tactile paving, and audio announcements.',
                             style: YatraTypography.bodySans(fontSize: 11, color: YatraColors.inkSecondary),
                           ),
                         ],
@@ -161,7 +161,7 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
                   children: [
                     FilterChip(
                       selected: _filterRamp,
-                      label: const Text('Ramp Boarding'),
+                      label: const Text('Ramp boarding'),
                       selectedColor: YatraColors.paleGreen,
                       checkmarkColor: YatraColors.heritageGreen,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(YatraRadii.button)),
@@ -170,7 +170,7 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
                     const SizedBox(width: 8),
                     FilterChip(
                       selected: _filterTactile,
-                      label: const Text('Tactile Paving'),
+                      label: const Text('Tactile paving'),
                       selectedColor: YatraColors.paleAmber,
                       checkmarkColor: YatraColors.amberWarning,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(YatraRadii.button)),
@@ -179,7 +179,7 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
                     const SizedBox(width: 8),
                     FilterChip(
                       selected: _filterAudio,
-                      label: const Text('Audio Alerts'),
+                      label: const Text('Audio alerts'),
                       selectedColor: YatraColors.paleGreen,
                       checkmarkColor: YatraColors.heritageGreen,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(YatraRadii.button)),
@@ -265,11 +265,11 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
                             runSpacing: 6,
                             children: [
                               if (stop['hasRamp'] as bool)
-                                _FeatureBadge(label: 'RAMP ACCESSIBLE', icon: Icons.accessible, color: YatraColors.heritageGreen),
+                                _FeatureBadge(label: 'Ramp accessible', icon: Icons.accessible, color: YatraColors.heritageGreen),
                               if (stop['hasTactile'] as bool)
-                                _FeatureBadge(label: 'TACTILE TILES', icon: Icons.straighten, color: YatraColors.amberWarning),
+                                _FeatureBadge(label: 'Tactile paving', icon: Icons.straighten, color: YatraColors.amberWarning),
                               if (stop['hasAudio'] as bool)
-                                _FeatureBadge(label: 'AUDIO BEACON', icon: Icons.volume_up, color: YatraColors.navyDeep),
+                                _FeatureBadge(label: 'Audio beacon', icon: Icons.volume_up, color: YatraColors.navyDeep),
                             ],
                           ),
                           const SizedBox(height: 10),

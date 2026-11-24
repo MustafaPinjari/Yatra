@@ -37,39 +37,39 @@ export default function OperatorWebMaster() {
             <YatraBrandLogo size="sm" variant="light" />
             <div className="hidden md:block h-5 w-px bg-slate-700" />
             <div className="hidden md:block">
-              <span className="text-xs font-bold text-white tracking-wide">
-                OPERATOR COMMAND & MUNICIPAL INTELLIGENCE
+              <span className="text-xs font-semibold text-white tracking-normal">
+                Operator Command and Municipal Intelligence
               </span>
               <p className="text-[10px] text-slate-400">
-                Delhi Transport Corporation · Universal Accessibility Network
+                Delhi Transport Corporation · Accessibility Operations Network
               </p>
             </div>
           </div>
 
           {/* Primary Portal Navigation Tabs */}
-          <nav aria-label="Portal Navigation" className="flex items-center gap-1.5 bg-[#0B132B] p-1 rounded-xl border border-slate-800 text-xs font-semibold">
+          <nav aria-label="Portal Navigation" className="flex items-center gap-1.5 bg-[#0B132B] p-1 rounded-xl border border-slate-800 text-xs font-medium">
             <button
               onClick={() => setActiveTab("COMMAND")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                 activeTab === "COMMAND"
-                  ? "bg-[#E96835] text-white shadow-xs font-bold"
+                  ? "bg-[#E96835] text-white shadow-xs font-semibold"
                   : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
               <LayoutDashboard className="h-3.5 w-3.5" />
-              <span>Command Centre</span>
+              <span>Command centre</span>
             </button>
 
             <button
               onClick={() => setActiveTab("ASSISTANCE")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                 activeTab === "ASSISTANCE"
-                  ? "bg-[#E96835] text-white shadow-xs font-bold"
+                  ? "bg-[#E96835] text-white shadow-xs font-semibold"
                   : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
               <Radio className="h-3.5 w-3.5 text-[#E96835]" />
-              <span>Assistance Queue</span>
+              <span>Assistance queue</span>
               <span className="rounded-full bg-[#E96835] text-white text-[10px] px-1.5 py-0.2 font-bold">3</span>
             </button>
 
@@ -77,44 +77,44 @@ export default function OperatorWebMaster() {
               onClick={() => setActiveTab("INCIDENTS")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                 activeTab === "INCIDENTS"
-                  ? "bg-[#E96835] text-white shadow-xs font-bold"
+                  ? "bg-[#E96835] text-white shadow-xs font-semibold"
                   : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
               <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
-              <span>Maintenance & Incidents</span>
+              <span>Incidents</span>
             </button>
 
             <button
               onClick={() => setActiveTab("FLEET")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                 activeTab === "FLEET"
-                  ? "bg-[#E96835] text-white shadow-xs font-bold"
+                  ? "bg-[#E96835] text-white shadow-xs font-semibold"
                   : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
               <Bus className="h-3.5 w-3.5" />
-              <span>Fleet Operations</span>
+              <span>Fleet operations</span>
             </button>
 
             <button
               onClick={() => setActiveTab("GOVERNMENT")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
                 activeTab === "GOVERNMENT"
-                  ? "bg-[#16764C] text-white shadow-xs font-bold"
+                  ? "bg-[#16764C] text-white shadow-xs font-semibold"
                   : "text-slate-300 hover:text-white hover:bg-slate-800"
               }`}
             >
               <Building className="h-3.5 w-3.5 text-emerald-300" />
-              <span>Govt Intelligence</span>
+              <span>Municipal analytics</span>
             </button>
           </nav>
 
           {/* Right Status Controls */}
           <div className="hidden lg:flex items-center gap-4 text-xs">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-1 rounded-full">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Sepolia Ledger Synced</span>
+            <div className="flex items-center gap-1.5 text-emerald-400 font-medium bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-1 rounded-full">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              <span>Sepolia ledger synced</span>
             </div>
 
             <div className="flex items-center gap-2 pl-2 border-l border-slate-700">

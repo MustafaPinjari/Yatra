@@ -108,7 +108,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> with SingleTick
                               Icon(Icons.sensors, size: 12, color: YatraColors.heritageGreen),
                               SizedBox(width: 6),
                               Text(
-                                'GPS FEED: 2 SEC AGO',
+                                'GPS telemetry: 2s ago',
                                 style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 10,

@@ -19,22 +19,22 @@ void main() {
 
     // 1. Verify Intro Screen
     expect(find.text('YATRA'), findsOneWidget);
-    expect(find.text('DELHI TRANSIT ATLAS'), findsOneWidget);
-    expect(find.text('Move Delhi\nTogether.'), findsOneWidget);
-    expect(find.text('Start Your Journey'), findsOneWidget);
+    expect(find.text('Delhi Transit Atlas'), findsOneWidget);
+    expect(find.text('Move Delhi\ntogether'), findsOneWidget);
+    expect(find.text('Start your journey'), findsOneWidget);
 
-    // 2. Tap 'Start Your Journey' to navigate to Home
-    await tester.tap(find.text('Start Your Journey'));
+    // 2. Tap 'Start your journey' to navigate to Home
+    await tester.tap(find.text('Start your journey'));
     await tester.pumpAndSettle();
 
     // 3. Verify Home Screen
-    expect(find.text('NEW DELHI · DTC NETWORK'), findsOneWidget);
-    expect(find.text('Namaste, Traveler'), findsOneWidget);
-    expect(find.text('Plan Trip'), findsOneWidget);
-    expect(find.text('Live Buses'), findsOneWidget);
+    expect(find.text('Delhi · DTC network'), findsOneWidget);
+    expect(find.text('Delhi Transit Network'), findsOneWidget);
+    expect(find.text('Plan trip'), findsOneWidget);
+    expect(find.text('Live buses'), findsOneWidget);
     expect(find.text('Assistance'), findsOneWidget);
-    expect(find.text('Accessible Stops'), findsOneWidget);
-    expect(find.text('Approaching Low-Floor Bus'), findsOneWidget);
+    expect(find.text('Accessible stops'), findsOneWidget);
+    expect(find.text('Approaching low-floor bus'), findsOneWidget);
   });
 
   testWidgets('Passenger app routes directly to Journey Planner and toggles filters', (WidgetTester tester) async {
@@ -62,7 +62,7 @@ void main() {
     expect(find.text('Bus Only'), findsOneWidget);
     expect(find.text('100% Step-Free'), findsOneWidget);
     expect(find.text('Recommended Accessible Routes'), findsOneWidget);
-    expect(find.text('★ RECOMMENDED STEP-FREE ROUTE'), findsOneWidget);
+    expect(find.text('Recommended step-free route'), findsOneWidget);
   });
 
   testWidgets('Passenger app routes to Assistance Screen and initiates Handshake', (WidgetTester tester) async {
@@ -87,9 +87,9 @@ void main() {
 
     // Verify Assistance Elements
     expect(find.text('Boarding Assistance'), findsOneWidget);
-    expect(find.text('AccessHandshake Signaling'), findsOneWidget);
+    expect(find.text('Boarding assistance handshake'), findsOneWidget);
 
-    final buttonFinder = find.text('Send Boarding Handshake Request');
+    final buttonFinder = find.text('Send boarding assistance request');
     await tester.scrollUntilVisible(buttonFinder, 200);
     expect(buttonFinder, findsOneWidget);
 
@@ -98,7 +98,7 @@ void main() {
     await tester.pump();
 
     // Verify Pending Transmitting state
-    expect(find.text('Transmitting Signal to Bus Cab...'), findsOneWidget);
+    expect(find.text('Transmitting signal to driver console...'), findsOneWidget);
 
     // Advance clock past simulated 1.5s delay
     await tester.pump(const Duration(milliseconds: 1600));

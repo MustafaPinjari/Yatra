@@ -107,12 +107,12 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
 
               // Section Headline & Explainer
               Text(
-                'AccessHandshake Signaling',
+                'Boarding assistance handshake',
                 style: YatraTypography.displayHeadline(fontSize: 22),
               ),
               const SizedBox(height: 4),
               Text(
-                'Signals the approaching bus crew 5 minutes prior to arrival so the ramp is deployed safely without boarding friction.',
+                'Alerts the approaching crew five minutes before arrival so the ramp or space is prepared before the stop.',
                 style: YatraTypography.bodySans(fontSize: 13, color: YatraColors.inkSecondary),
               ),
               const SizedBox(height: 16),
@@ -273,7 +273,7 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                   ),
                   onPressed: _handleSendRequest,
                   icon: const Icon(Icons.send),
-                  label: const Text('Send Boarding Handshake Request'),
+                  label: const Text('Send boarding assistance request'),
                 ),
               ] else ...[
                 Container(
@@ -299,7 +299,7 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              _isDriverAcknowledged ? 'Driver Acknowledged · Ramp Ready' : 'Transmitting Signal to Bus Cab...',
+                              _isDriverAcknowledged ? 'Driver Acknowledged · Ramp Ready' : 'Transmitting signal to driver console...',
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -313,7 +313,7 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                       const SizedBox(height: 6),
                       Text(
                         _isDriverAcknowledged
-                            ? 'Captain R. Kumar (ID: 8821) confirmed low-floor ramp deployment at Stop Bay 2.'
+                            ? 'Driver R. Kumar (ID: 8821) confirmed ramp deployment at Stop Bay 2.'
                             : 'Beacon packet broadcast via MQTT / WebSocket to Delhi Transit Dispatch.',
                         style: TextStyle(
                           fontFamily: 'Inter',
@@ -332,7 +332,7 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                       _isDriverAcknowledged = false;
                     });
                   },
-                  child: const Text('Reset or Cancel Request'),
+                  child: const Text('Cancel request'),
                 ),
               ],
               const SizedBox(height: 20),

@@ -58,11 +58,11 @@ class IntroScreen extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'DELHI TRANSIT ATLAS',
+                              'Delhi Transit Atlas',
                               style: YatraTypography.labelCaps(
                                 fontSize: 9,
                                 color: YatraColors.heritageGreen,
-                                letterSpacing: 1.8,
+                                letterSpacing: 1.2,
                               ),
                             ),
                           ],
@@ -82,7 +82,7 @@ class IntroScreen extends StatelessWidget {
                           const Icon(Icons.accessible_forward, size: 14, color: YatraColors.heritageGreen),
                           const SizedBox(width: 4),
                           Text(
-                            'ACCESSIBLE',
+                            'Step-free',
                             style: YatraTypography.labelCaps(fontSize: 10, color: YatraColors.heritageGreen),
                           ),
                         ],
@@ -121,7 +121,7 @@ class IntroScreen extends StatelessWidget {
 
                 // Editorial Display Headline & Narrative
                 Text(
-                  'Move Delhi\nTogether.',
+                  'Move Delhi\ntogether',
                   style: YatraTypography.displayHeadline(
                     fontSize: 32,
                     height: 1.15,
@@ -133,12 +133,12 @@ class IntroScreen extends StatelessWidget {
                   style: YatraTypography.labelCaps(
                     fontSize: 11,
                     color: YatraColors.terracotta,
-                    letterSpacing: 1.8,
+                    letterSpacing: 1.4,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  'Every bus, every stop, every journey designed for effortless transit across the National Capital Territory.',
+                  'Bus timetables, step-free stop ratings, and driver boarding assistance across Delhi.',
                   style: YatraTypography.bodySans(
                     fontSize: 13,
                     color: YatraColors.inkSecondary,
@@ -153,7 +153,7 @@ class IntroScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Start Your Journey'),
+                      Text('Start your journey'),
                       SizedBox(width: 8),
                       Icon(Icons.arrow_forward, size: 18),
                     ],
@@ -162,7 +162,7 @@ class IntroScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 OutlinedButton(
                   onPressed: () => context.push('/profile'),
-                  child: const Text('Configure Accessibility Needs'),
+                  child: const Text('Configure accessibility preferences'),
                 ),
                 const SizedBox(height: 8),
               ],
