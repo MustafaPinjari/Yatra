@@ -81,13 +81,18 @@ class PassengerHomeScreen extends StatelessWidget {
                       const SizedBox(width: 4),
                       IconButton(
                         icon: const Icon(Icons.notifications_none_outlined, color: YatraColors.inkPrimary),
-                        tooltip: 'Notifications & Handshake Updates',
+                        tooltip: 'Notifications',
                         onPressed: () => context.push('/notifications'),
                       ),
                       IconButton(
                         icon: const Icon(Icons.history, color: YatraColors.inkPrimary),
-                        tooltip: 'Trip History',
+                        tooltip: 'Trip history',
                         onPressed: () => context.push('/history'),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.person_outline, color: YatraColors.inkPrimary),
+                        tooltip: 'Accessibility profile',
+                        onPressed: () => context.push('/profile'),
                       ),
                     ],
                   ),
@@ -147,7 +152,7 @@ class PassengerHomeScreen extends StatelessWidget {
 
               // Quick Search Bar
               GestureDetector(
-                onTap: () => context.push('/planner'),
+                onTap: () => context.go('/planner'),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
@@ -209,7 +214,7 @@ class PassengerHomeScreen extends StatelessWidget {
                       title: 'Plan trip',
                       subtitle: 'Step-free routing',
                       badgeColor: YatraColors.terracotta,
-                      onTap: () => context.push('/planner'),
+                      onTap: () => context.go('/planner'),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -219,7 +224,7 @@ class PassengerHomeScreen extends StatelessWidget {
                       title: 'Live buses',
                       subtitle: 'Real-time GPS',
                       badgeColor: YatraColors.navyDeep,
-                      onTap: () => context.push('/tracking'),
+                      onTap: () => context.go('/tracking'),
                     ),
                   ),
                 ],
@@ -233,7 +238,7 @@ class PassengerHomeScreen extends StatelessWidget {
                       title: 'Assistance',
                       subtitle: 'Driver handshake',
                       badgeColor: YatraColors.accentOrange,
-                      onTap: () => context.push('/assistance'),
+                      onTap: () => context.go('/assistance'),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -243,7 +248,7 @@ class PassengerHomeScreen extends StatelessWidget {
                       title: 'Accessible stops',
                       subtitle: 'AccessGraph rated',
                       badgeColor: YatraColors.heritageGreen,
-                      onTap: () => context.push('/stops'),
+                      onTap: () => context.go('/stops'),
                     ),
                   ),
                 ],
@@ -273,15 +278,19 @@ class PassengerHomeScreen extends StatelessWidget {
 
               // Approaching Bus Card
               Card(
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(YatraRadii.card),
                   side: const BorderSide(color: YatraColors.softBorder, width: 1.2),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+                child: InkWell(
+                  onTap: () => context.go('/tracking'),
+                  borderRadius: BorderRadius.circular(YatraRadii.card),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -366,7 +375,7 @@ class PassengerHomeScreen extends StatelessWidget {
                             textColor: YatraColors.inkPrimary,
                           ),
                           TextButton(
-                            onPressed: () => context.push('/assistance'),
+                            onPressed: () => context.go('/assistance'),
                             child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -382,6 +391,7 @@ class PassengerHomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
               const SizedBox(height: 24),
             ],
           ),

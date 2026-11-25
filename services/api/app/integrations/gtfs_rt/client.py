@@ -29,6 +29,8 @@ class GtfsRtClient:
         self.timeout_seconds = timeout_seconds
         self.last_status_code: int | None = None
         self.last_latency_ms: float = 0.0
+        self.last_network_latency_ms: float = 0.0
+        self.last_decode_ms: float = 0.0
         self.last_error: str | None = None
 
     @property
@@ -50,10 +52,10 @@ class GtfsRtClient:
             "User-Agent": "YATRA-Delhi-Transit-Platform/1.0",
         }
 
-        # Add authentication without logging header content
+        # Add authenticating x-api-key header without logging header content
+        # Note: Do not send Authorization: Bearer as DTS rejects it with 401 invalid token type
         if self.api_key:
             headers["x-api-key"] = self.api_key
-            headers["Authorization"] = f"Bearer {self.api_key}"
 
         max_retries = 3
         backoff_seconds = 1.0
@@ -66,7 +68,9 @@ class GtfsRtClient:
                     follow_redirects=True,
                 ) as client:
                     resp = await client.get(self.endpoint_url, headers=headers)
-                    self.last_latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
+                    net_time = round((time.perf_counter() - start_time) * 1000, 2)
+                    self.last_latency_ms = net_time
+                    self.last_network_latency_ms = net_time
                     self.last_status_code = resp.status_code
 
                     if resp.status_code == 200:
@@ -76,20 +80,26 @@ class GtfsRtClient:
                         # Check if response is JSON
                         if "json" in content_type or resp.content.startswith(b"{"):
                             try:
+                                t_json_start = time.perf_counter()
                                 json_data = resp.json()
+                                self.last_decode_ms = round((time.perf_counter() - t_json_start) * 1000, 2)
                                 return json_data, self.last_latency_ms
                             except Exception:
                                 pass
 
                         # Parse standard Protocol Buffer
                         try:
+                            t_pb_start = time.perf_counter()
                             feed = gtfs_realtime_pb2.FeedMessage()
                             feed.ParseFromString(resp.content)
+                            self.last_decode_ms = round((time.perf_counter() - t_pb_start) * 1000, 2)
                             return feed, self.last_latency_ms
                         except Exception as pb_err:
                             # If protobuf parse fails, try JSON fallback
                             try:
+                                t_json_start = time.perf_counter()
                                 json_data = resp.json()
+                                self.last_decode_ms = round((time.perf_counter() - t_json_start) * 1000, 2)
                                 return json_data, self.last_latency_ms
                             except Exception:
                                 self.last_error = f"Failed to parse response as Protobuf or JSON: {pb_err}"

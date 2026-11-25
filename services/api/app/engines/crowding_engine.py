@@ -8,7 +8,7 @@ from app.integrations.gtfs_rt.processor import get_vehicle_processor
 class CrowdingEngine:
     """Problem 2: Crowdedness-aware transport intelligence engine.
 
-    Models passenger flow, accounts for incomplete ETM conductor ticketing coverage (3-4% capture rate),
+    Models passenger flow, handles incomplete ETM conductor ticketing coverage (uncalibrated planning assumption),
     calculates headway bunching factors, and produces an explainable Relative Crowding Index (RCI)
     with multi-objective journey ranking.
     """
@@ -16,7 +16,7 @@ class CrowdingEngine:
     # Baseline passenger capacity by Delhi bus class
     STANDARD_BUS_CAPACITY = 65  # 35 seated + 30 standing
     LOW_FLOOR_BUS_CAPACITY = 55  # 31 seated + 24 standing + 1 wheelchair bay
-    ETM_SAMPLE_EXPANSION_FACTOR = 28.5  # Inverse of ~3.5% conductor ticketing capture rate
+    ETM_SAMPLE_EXPANSION_FACTOR = 28.5  # Uncalibrated planning hypothesis (inverse of unverified 3.5% assumption)
 
     def __init__(self, repo: TransitRepository | None = None) -> None:
         self.repo = repo or get_transit_repository()
@@ -168,11 +168,17 @@ class CrowdingEngine:
             "confidence_level": rci_data.get("confidence_level", "MEDIUM"),
             "etm_sample_factor": self.ETM_SAMPLE_EXPANSION_FACTOR,
             "wheelchair_space_available": rci < 0.85,
-            "provenance": "SAMPLE_BASED_INFERENCE",
+            "provenance": "ESTIMATED_RELATIVE_HEURISTIC",
             "expansion_factor_status": "UNCALIBRATED_HYPOTHESIS",
             "sample_rate_percent": 3.5,
-            "uncertainty_margin_percent": 25.0,
-            "limitation_note": "Universal 28.5x expansion factor is an uncalibrated heuristic without full conductor ETM records.",
+            "sample_rate_status": "UNVERIFIED_PLANNING_HYPOTHESIS",
+            "uncertainty_rating": "UNVERIFIED_HEURISTIC",
+            "uncertainty_margin_percent": None,
+            "limitation_note": (
+                "YATRA estimates relative crowding using available operational signals, including vehicle "
+                "headway deviations. It does not claim exact onboard passenger counts. ETM sampling assumptions "
+                "have not yet been independently calibrated."
+            ),
         }
 
     def rank_itineraries(

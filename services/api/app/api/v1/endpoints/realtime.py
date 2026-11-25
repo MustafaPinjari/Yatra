@@ -45,6 +45,13 @@ async def get_operator_fleet_live() -> ApiResponse[list[dict]]:
     processor = get_vehicle_processor()
     vehicles = processor.get_live_vehicles()
 
+    # If large fleet, prioritize corridor routes and limit to top 30 to keep UI responsive
+    if len(vehicles) > 30:
+        priority_routes = {"502", "route_delhi_502", "534", "route_delhi_534", "TMS(+)", "route_delhi_tms"}
+        priority_vehicles = [v for v in vehicles if v.route_id in priority_routes or v.route_short_name in priority_routes]
+        other_vehicles = [v for v in vehicles if v not in priority_vehicles]
+        vehicles = (priority_vehicles + other_vehicles)[:30]
+
     telemetry_list = []
     for v in vehicles:
         telemetry_list.append({

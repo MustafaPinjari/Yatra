@@ -58,10 +58,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify Planner Elements
-    expect(find.text('Journey Planner'), findsOneWidget);
-    expect(find.text('Bus Only'), findsOneWidget);
-    expect(find.text('100% Step-Free'), findsOneWidget);
-    expect(find.text('Recommended Accessible Routes'), findsOneWidget);
+    expect(find.text('Journey planner'), findsOneWidget);
+    expect(find.text('Bus only'), findsOneWidget);
+    expect(find.text('Step-free access'), findsOneWidget);
+    expect(find.text('Recommended accessible routes'), findsOneWidget);
     expect(find.text('Recommended step-free route'), findsOneWidget);
   });
 
@@ -86,7 +86,7 @@ void main() {
     await tester.pumpAndSettle();
 
     // Verify Assistance Elements
-    expect(find.text('Boarding Assistance'), findsOneWidget);
+    expect(find.text('Boarding assistance'), findsOneWidget);
     expect(find.text('Boarding assistance handshake'), findsOneWidget);
 
     final buttonFinder = find.text('Send boarding assistance request');
@@ -100,11 +100,11 @@ void main() {
     // Verify Pending Transmitting state
     expect(find.text('Transmitting signal to driver console...'), findsOneWidget);
 
-    // Advance clock past simulated 1.5s delay
-    await tester.pump(const Duration(milliseconds: 1600));
+    // Advance clock past simulated 1.2s delay
+    await tester.pump(const Duration(milliseconds: 1400));
     await tester.pumpAndSettle();
 
     // Verify Acknowledged State
-    expect(find.text('Driver Acknowledged · Ramp Ready'), findsOneWidget);
+    expect(find.text('Driver acknowledged · Ramp ready'), findsOneWidget);
   });
 }

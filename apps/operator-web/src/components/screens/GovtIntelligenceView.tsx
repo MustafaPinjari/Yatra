@@ -85,11 +85,22 @@ interface FeederEvEnergyData {
   daily_trips_scheduled: number;
   daily_distance_km: number;
   ev_nominal_battery_capacity_kwh: number;
+  usable_depth_of_discharge?: number;
   usable_battery_capacity_kwh: number;
   specific_energy_consumption_kwh_km: number;
   energy_consumed_per_loop_kwh: number;
   total_daily_energy_consumed_kwh: number;
+  complete_loops_before_recharge?: number;
   loops_before_mandatory_recharge: number;
+  theoretical_range_km?: number;
+  opportunity_charging_duration_minutes?: number;
+  opportunity_charging_energy_kwh?: number;
+  opportunity_charging_additional_range_km?: number;
+  opportunity_charging_additional_loops?: number;
+  opportunity_charging_net_energy_kwh?: number;
+  opportunity_charging_net_range_km?: number;
+  opportunity_charging_net_loops?: number;
+  charger_efficiency?: number;
   requires_midday_opportunity_charge: boolean;
   depot_fast_charger_power_kw: number;
   estimated_opportunity_topup_minutes: number;
@@ -300,6 +311,107 @@ export function GovtIntelligenceView() {
           </div>
         </section>
 
+        {/* 2b. Problem 1: Journey Intelligence & Timetable Deviation Validation */}
+        <section className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-6 shadow-editorial space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#E6DDD0] pb-3 gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#172653]">
+                  <Bus className="h-3.5 w-3.5" />
+                  <span>Problem 1 · Multimodal journey planning and timetable deviation</span>
+                </span>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">
+                  OBSERVED TIMETABLE
+                </span>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold border border-amber-200">
+                  SCENARIO_MODEL CONGESTION
+                </span>
+              </div>
+              <h2 className="font-editorial-serif text-xl font-bold text-[#101B3A] mt-0.5">
+                RAPTOR Pareto multi-criteria routing under traffic impedance
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-[#64748B]">Sample: 30 evaluated trips</span>
+          </div>
+
+          <p className="text-xs text-[#64748B]">
+            Evaluates journey runtimes against official GTFS scheduled timetables. Dwell times incorporate physical ramp deployment delays (+45s) and curb clearance.
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Overall timetable MAE</span>
+              <span className="font-mono text-base font-bold text-[#101B3A] tabular-nums">6.71 min</span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Overall RMSE</span>
+              <span className="font-mono text-base font-bold text-[#101B3A] tabular-nums">8.56 min</span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Peak period MAE</span>
+              <span className="font-mono text-base font-bold text-rose-700 tabular-nums">13.03 min</span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Off-peak MAE</span>
+              <span className="font-mono text-base font-bold text-emerald-700 tabular-nums">2.50 min</span>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0] text-xs text-[#64748B] flex items-start gap-2">
+            <Info className="h-4 w-4 text-[#172653] flex-shrink-0 mt-0.5" />
+            <p>
+              <strong>Methodology disclosure:</strong> Evaluation compares routing predictions against scheduled GTFS runtimes (timetable deviation validation). Peak congestion multipliers (1.45x AM / 1.55x PM) are explicitly categorized as uncalibrated engineering assumptions pending full historical GPS trajectory archive ingestion.
+            </p>
+          </div>
+        </section>
+
+        {/* 2c. Problem 2: Relative Crowding Index & Comfort Scoring */}
+        <section className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-6 shadow-editorial space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#E6DDD0] pb-3 gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5 text-[11px] font-semibold text-[#E96835]">
+                  <Gauge className="h-3.5 w-3.5" />
+                  <span>Problem 2 · Passenger crowding inference and vehicle comfort</span>
+                </span>
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold border border-amber-200">
+                  ESTIMATED HEURISTIC
+                </span>
+              </div>
+              <h2 className="font-editorial-serif text-xl font-bold text-[#101B3A] mt-0.5">
+                Relative Crowding Index (RCI) from sample ETM and headway variance
+              </h2>
+            </div>
+            <span className="text-xs font-mono text-[#64748B]">Route 502 active profile</span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Relative crowding index</span>
+              <span className="font-mono text-base font-bold text-amber-700 tabular-nums">0.54 / 1.00</span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Crowding tier</span>
+              <span className="font-mono text-base font-bold text-[#101B3A]">Moderate</span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Headway bunching dev</span>
+              <span className="font-mono text-base font-bold text-slate-700 tabular-nums">0.18</span>
+            </div>
+            <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
+              <span className="text-[10px] text-[#64748B] block">Step-free ramp bay</span>
+              <span className="font-mono text-base font-bold text-emerald-700">Reserved space</span>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0] text-xs text-[#64748B] flex items-start gap-2">
+            <Info className="h-4 w-4 text-[#E96835] flex-shrink-0 mt-0.5" />
+            <p>
+              <strong>Data limitation disclosure:</strong> YATRA estimates relative crowding using available operational signals, including vehicle headway deviations. It does not claim exact onboard passenger counts. ETM sampling assumptions have not yet been independently calibrated.
+            </p>
+          </div>
+        </section>
+
         {/* 3. Problem 3: Origin-Destination Matrix with Sensitivity Analysis */}
         <section className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-6 shadow-editorial space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#E6DDD0] pb-3 gap-2">
@@ -337,7 +449,7 @@ export function GovtIntelligenceView() {
           </div>
 
           <p className="text-xs text-[#64748B]">
-            Calibrated trip generation and attraction across 7 Delhi Transit Analysis Zones (TAZ). Flow separation identifies 46% observed DMRC rail journeys versus 54% estimated DTC surface bus trips.
+            Estimated trip generation and attraction across 7 Delhi Transit Analysis Zones (TAZ) for the 3-hour morning peak period (08:00–11:00, 546,143 total modeled trips). Furness IPF balances estimated trip generation and attraction marginals. Its convergence does not independently establish the true passenger origin-destination distribution. Mode split (46% Metro / 54% Bus) represents an assumed aggregate scenario proportion.
           </p>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
@@ -411,8 +523,8 @@ export function GovtIntelligenceView() {
                   <Zap className="h-3.5 w-3.5" />
                   <span>Problem 4 · Metro feeder and electric fleet optimization</span>
                 </span>
-                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">
-                  OBSERVED ROAD WIDTHS
+                <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold border border-amber-200">
+                  PLANNING WIDTH ESTIMATE (MPD-2021)
                 </span>
               </div>
               <h2 className="font-editorial-serif text-xl font-bold text-[#101B3A] mt-0.5">
@@ -446,8 +558,8 @@ export function GovtIntelligenceView() {
               </span>
             </div>
             <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
-              <span className="text-[10px] text-[#64748B] block">Carriageway width</span>
-              <span className="font-mono text-base font-bold text-emerald-700 tabular-nums">≥ 6.0 m verified</span>
+              <span className="text-[10px] text-[#64748B] block">Planning width</span>
+              <span className="font-mono text-base font-bold text-slate-800 tabular-nums">≥ 6.0 m standard</span>
             </div>
             <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0]">
               <span className="text-[10px] text-[#64748B] block">Route length cap</span>
@@ -458,6 +570,10 @@ export function GovtIntelligenceView() {
               <span className="font-mono text-base font-bold text-rose-700 tabular-nums">Strictly rejected</span>
             </div>
           </div>
+
+          <p className="text-[11px] text-[#64748B] italic bg-[#FAF5EE] p-2.5 rounded-lg border border-[#E6DDD0]">
+            Candidate paths satisfy the model's 6-metre planning-width constraint using available planning estimates. Unknown-width roads are rejected. Physical carriageway compliance requires field verification.
+          </p>
 
           {/* EV Energy & Depot Fast Charging Specification Card */}
           <div className="rounded-xl border border-orange-200 bg-orange-50/60 p-4 space-y-2 text-xs">
@@ -476,15 +592,15 @@ export function GovtIntelligenceView() {
                 <span className="font-bold tabular-nums">1.15 kWh/km</span>
               </div>
               <div className="p-2 rounded bg-white border border-orange-100">
-                <span className="text-[9px] text-[#64748B] block font-sans">Daily loop battery life</span>
-                <span className="font-bold tabular-nums">
-                  {feederEvEnergy ? `${feederEvEnergy.loops_before_mandatory_recharge} loops` : "21 loops"}
+                <span className="text-[9px] text-[#64748B] block font-sans">Single-charge range</span>
+                <span className="font-bold tabular-nums text-slate-800">
+                  {feederEvEnergy ? `${feederEvEnergy.theoretical_range_km || 125.2} km (${feederEvEnergy.complete_loops_before_recharge || 21} loops)` : "125.2 km (21 loops)"}
                 </span>
               </div>
               <div className="p-2 rounded bg-white border border-orange-100">
-                <span className="text-[9px] text-[#64748B] block font-sans">Depot 60kW recharge</span>
+                <span className="text-[9px] text-[#64748B] block font-sans">45m 60kW opportunity top-up</span>
                 <span className="font-bold text-[#16764C] tabular-nums">
-                  {feederEvEnergy ? `${feederEvEnergy.estimated_opportunity_topup_minutes} min top-up` : "45 min top-up"}
+                  +45 kWh (+39.1 km / 6 loops)
                 </span>
               </div>
             </div>
@@ -527,7 +643,7 @@ export function GovtIntelligenceView() {
             <div className="p-3.5 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0] space-y-1">
               <span className="text-[11px] text-[#64748B] block">Flow conservation identity</span>
               <p className="font-semibold text-xs text-[#16764C] flex items-center gap-1">
-                <CheckCircle2 className="h-3.5 w-3.5" /> Terminal load balances to zero
+                <CheckCircle2 className="h-3.5 w-3.5" /> Terminal load balances to zero (model boundary condition)
               </p>
               <p className="font-mono text-[11px] text-[#64748B] tabular-nums">
                 Residual: {segmentData ? `${segmentData.conservation_residual}` : "0.0"} passengers
@@ -546,7 +662,7 @@ export function GovtIntelligenceView() {
           <div className="p-3 rounded-xl bg-[#FAF5EE] border border-[#E6DDD0] text-xs text-[#64748B] flex items-start gap-2">
             <Info className="h-4 w-4 text-[#172653] flex-shrink-0 mt-0.5" />
             <p>
-              <strong>Epistemic disclosure:</strong> Passenger flow conservation is a mathematical consistency identity. Because conductor ETM records record boardings only, alightings are estimated via spatial gravity decay. Confidence intervals accumulate from ±5% at origin to ±22% intermediate, collapsing at terminal approach.
+              <strong>Epistemic disclosure:</strong> Passenger flow conservation (L_i = L_{'{i-1}'} + B_i - A_i with L_0 = 0 and L_n = 0) is a mathematical consistency identity and model boundary condition. Because conductor ETM records record boardings only, intermediate alightings are estimated via spatial gravity decay. Confidence intervals accumulate from ±5% at origin to ±22% intermediate, collapsing at terminal approach. The terminal zero residual is an enforced conservation identity, not independent empirical validation.
             </p>
           </div>
         </section>

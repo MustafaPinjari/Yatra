@@ -127,6 +127,10 @@ def test_api_feeder_ev_energy():
     assert data["ev_nominal_battery_capacity_kwh"] == 180.0
     assert data["usable_battery_capacity_kwh"] == 144.0
     assert data["specific_energy_consumption_kwh_km"] == 1.15
+    assert data["complete_loops_before_recharge"] == 21
+    assert data["theoretical_range_km"] == 125.22
+    assert data["opportunity_charging_energy_kwh"] == 45.0
+    assert data["opportunity_charging_additional_range_km"] == 39.13
 
 
 def test_api_journey_plan_invalid_coordinates():

@@ -31,6 +31,7 @@ class VehiclePositionProcessor:
         self.repo = get_transit_repository()
         self.vehicles: dict[str, VehiclePositionModel] = {}
         self.last_poll_time_iso: str | None = None
+        self.last_successful_poll_time_iso: str | None = None
         self.is_running = False
         self._polling_task: asyncio.Task[None] | None = None
 
@@ -113,9 +114,9 @@ class VehiclePositionProcessor:
 
     async def poll_and_process(self) -> int:
         """Executes a single poll against the GTFS-RT feed and processes vehicle updates."""
+        now = int(time.time())
         if not self.client.is_configured:
             # Re-compute freshness on baseline fleet
-            now = int(time.time())
             for v in self.vehicles.values():
                 v.freshness_seconds = now - v.timestamp
                 v.is_stale = v.freshness_seconds > STALE_THRESHOLD_SECONDS
@@ -126,6 +127,10 @@ class VehiclePositionProcessor:
         self.last_poll_time_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(now))
 
         if not raw_feed:
+            # When feed fails, update freshness so old positions are never claimed as current
+            for v in self.vehicles.values():
+                v.freshness_seconds = now - v.timestamp
+                v.is_stale = v.freshness_seconds > STALE_THRESHOLD_SECONDS
             return len(self.vehicles)
 
         count = 0
@@ -133,6 +138,9 @@ class VehiclePositionProcessor:
             count = self._process_protobuf_feed(raw_feed, now)
         elif isinstance(raw_feed, dict):
             count = self._process_json_feed(raw_feed, now)
+
+        if count > 0:
+            self.last_successful_poll_time_iso = self.last_poll_time_iso
 
         logger.info(f"Processed {count} vehicle updates from GTFS-RT feed (Latency: {latency}ms)")
         return count
@@ -258,18 +266,25 @@ class VehiclePositionProcessor:
         now = int(time.time())
         fresh_count = 0
         stale_count = 0
+        routes = set()
 
         for v in self.vehicles.values():
             if (now - v.timestamp) <= STALE_THRESHOLD_SECONDS:
                 fresh_count += 1
             else:
                 stale_count += 1
+            if v.route_id:
+                routes.add(v.route_id)
+            elif v.route_short_name:
+                routes.add(v.route_short_name)
 
         status = "OPERATIONAL"
         if not self.client.is_configured:
             status = "UNCONFIGURED"
         elif self.client.last_error:
             status = "API_ERROR"
+        elif len(self.vehicles) == 0:
+            status = "UNAVAILABLE"
         elif stale_count > 0 and fresh_count == 0:
             status = "STALE_DATA"
 
@@ -278,10 +293,14 @@ class VehiclePositionProcessor:
             api_endpoint_configured=bool(self.settings.DTS_GTFS_RT_API_ENDPOINT),
             api_key_configured=bool(self.settings.DTS_GTFS_RT_API_KEY),
             last_poll_timestamp=self.last_poll_time_iso,
+            last_successful_poll_timestamp=self.last_successful_poll_time_iso,
             last_poll_latency_ms=self.client.last_latency_ms,
+            network_latency_ms=self.client.last_network_latency_ms,
+            protobuf_decode_ms=self.client.last_decode_ms,
             total_active_vehicles=len(self.vehicles),
             fresh_vehicles_count=fresh_count,
             stale_vehicles_count=stale_count,
+            active_routes_count=len(routes),
             http_status_code=self.client.last_status_code,
             error_message=self.client.last_error,
         )

@@ -18,9 +18,16 @@ def test_crowding_engine_rci_bounds():
 
 def test_crowding_engine_etm_scaling():
     engine = CrowdingEngine()
-    # ETM sample factor should reflect non-census expansion
+    # ETM sample factor reflects an uncalibrated planning hypothesis, not a measured census expansion
     assert engine.ETM_SAMPLE_EXPANSION_FACTOR > 1.0
-    assert engine.ETM_SAMPLE_EXPANSION_FACTOR == 28.5  # 3.5% sampling factor
+    assert engine.ETM_SAMPLE_EXPANSION_FACTOR == 28.5
+
+    res = engine.estimate_route_crowding("route_delhi_502", hour=9.0)
+    assert res["expansion_factor_status"] == "UNCALIBRATED_HYPOTHESIS"
+    assert res["sample_rate_status"] == "UNVERIFIED_PLANNING_HYPOTHESIS"
+    assert res["uncertainty_rating"] == "UNVERIFIED_HEURISTIC"
+    assert res["provenance"] == "ESTIMATED_RELATIVE_HEURISTIC"
+    assert "YATRA estimates relative crowding" in res["limitation_note"]
 
 
 def test_crowding_engine_multi_objective_ranking():

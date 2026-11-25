@@ -88,6 +88,72 @@ class TransitRepository:
         if "route_delhi_502" in self.routes:
             self.route_to_stops["route_delhi_502"] = list(self.stops.values())
 
+        # Also load full GTFS stops dataset from data/gtfs/stops.txt if available
+        gtfs_candidates = [
+            Path.cwd() / "data" / "gtfs" / "stops.txt",
+            Path(__file__).resolve().parents[5] / "data" / "gtfs" / "stops.txt",
+        ]
+        gtfs_stops_path = next((p for p in gtfs_candidates if p.exists()), None)
+        if gtfs_stops_path:
+            try:
+                import csv
+                with open(gtfs_stops_path, encoding="utf-8") as f:
+                    reader = csv.DictReader(f)
+                    for row in reader:
+                        s_id = row.get("stop_id", "").strip()
+                        if not s_id or s_id in self.stops:
+                            continue
+                        s_name = row.get("stop_name", "").strip()
+                        s_lat_str = row.get("stop_lat", "").strip()
+                        s_lon_str = row.get("stop_lon", "").strip()
+                        if not s_lat_str or not s_lon_str:
+                            continue
+                        try:
+                            s_lat = float(s_lat_str)
+                            s_lon = float(s_lon_str)
+                        except ValueError:
+                            continue
+                        if not (28.0 <= s_lat <= 29.2 and 76.5 <= s_lon <= 77.8):
+                            continue
+
+                        is_metro = "metro" in s_name.lower() or "rail" in s_name.lower()
+                        self.stops[s_id] = StopModel(
+                            stop_id=s_id,
+                            stop_name=s_name,
+                            stop_lat=s_lat,
+                            stop_lon=s_lon,
+                            stop_code=row.get("stop_code"),
+                            stop_desc="DMRC Metro Station" if is_metro else "DTC Bus Stop",
+                            location_type=1 if is_metro else 0,
+                            wheelchair_boarding=1 if is_metro else 0,
+                            accessibility_score=92.0 if is_metro else 74.0,
+                            has_wheelchair_ramp=is_metro,
+                            has_tactile_paving=is_metro,
+                            has_shelter=True,
+                            curb_height_cm=14.0 if is_metro else 18.0,
+                        )
+            except Exception:
+                pass
+
+        # Populate realistic corridor shape for Route 502
+        route_502_shape = [
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6675, shape_pt_lon=77.2285, shape_pt_sequence=1, shape_dist_traveled=0.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6610, shape_pt_lon=77.2340, shape_pt_sequence=2, shape_dist_traveled=1100.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6562, shape_pt_lon=77.2410, shape_pt_sequence=3, shape_dist_traveled=1950.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6480, shape_pt_lon=77.2412, shape_pt_sequence=4, shape_dist_traveled=3000.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6415, shape_pt_lon=77.2405, shape_pt_sequence=5, shape_dist_traveled=3800.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6310, shape_pt_lon=77.2380, shape_pt_sequence=6, shape_dist_traveled=5100.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6180, shape_pt_lon=77.2310, shape_pt_sequence=7, shape_dist_traveled=6700.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.6020, shape_pt_lon=77.2220, shape_pt_sequence=8, shape_dist_traveled=8800.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.5850, shape_pt_lon=77.2140, shape_pt_sequence=9, shape_dist_traveled=11200.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.5684, shape_pt_lon=77.2078, shape_pt_sequence=10, shape_dist_traveled=13400.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.5520, shape_pt_lon=77.2020, shape_pt_sequence=11, shape_dist_traveled=15500.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.5350, shape_pt_lon=77.1930, shape_pt_sequence=12, shape_dist_traveled=17900.0),
+            ShapePointModel(shape_id="shp_502", shape_pt_lat=28.5175, shape_pt_lon=77.1820, shape_pt_sequence=13, shape_dist_traveled=20400.0),
+        ]
+        self.shapes["shp_502"] = route_502_shape
+        self.shapes["route_delhi_502"] = route_502_shape
+
     def update_from_parser(self, parser: Any, report: GtfsIngestionReport) -> None:
         """Atomically replaces repository data with freshly parsed GTFS feed."""
         if parser.stops:
@@ -153,19 +219,41 @@ class TransitRepository:
         """Returns ordered stop sequence for a given route."""
         return self.route_to_stops.get(route_id, [])
 
+    def get_route_shape(self, route_id: str) -> list[ShapePointModel]:
+        """Returns shape points for a given route or shape id."""
+        if route_id in self.shapes:
+            return self.shapes[route_id]
+        clean_id = route_id.replace("route_delhi_", "")
+        for k, v in self.shapes.items():
+            if clean_id in k:
+                return v
+        return []
+
     def get_all_stops(
         self,
         lat: float | None = None,
         lon: float | None = None,
         radius_km: float = 2.0,
         search: str | None = None,
+        limit: int | None = None,
     ) -> list[StopModel]:
         """Returns stops, with optional spatial radius search using Haversine formula."""
         stops = list(self.stops.values())
 
         if search:
             query = search.lower().strip()
-            stops = [s for s in stops if query in s.stop_name.lower() or query in s.stop_id.lower()]
+            prefix_matches: list[StopModel] = []
+            contains_matches: list[StopModel] = []
+            for s in stops:
+                s_name_lower = s.stop_name.lower()
+                s_id_lower = s.stop_id.lower()
+                if s_name_lower.startswith(query):
+                    prefix_matches.append(s)
+                elif query in s_name_lower or query in s_id_lower:
+                    contains_matches.append(s)
+            stops = prefix_matches + contains_matches
+            if limit is not None:
+                stops = stops[:limit]
 
         if lat is not None and lon is not None:
             filtered = []
@@ -173,7 +261,10 @@ class TransitRepository:
                 dist = self.haversine_distance_km(lat, lon, s.stop_lat, s.stop_lon)
                 if dist <= radius_km:
                     filtered.append(s)
-            return sorted(filtered, key=lambda s: self.haversine_distance_km(lat, lon, s.stop_lat, s.stop_lon))
+            res = sorted(filtered, key=lambda s: self.haversine_distance_km(lat, lon, s.stop_lat, s.stop_lon))
+            if limit is not None:
+                return res[:limit]
+            return res
 
         return stops
 

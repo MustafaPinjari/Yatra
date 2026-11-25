@@ -6,6 +6,7 @@ from app.schemas.common import ApiResponse
 from app.schemas.transit import (
     GtfsIngestionReport,
     RouteModel,
+    ShapePointModel,
     StopModel,
     TripModel,
 )
@@ -75,16 +76,25 @@ async def get_route_stops(route_id: str) -> ApiResponse[list[StopModel]]:
     return ApiResponse(success=True, data=stops)
 
 
+@router.get("/routes/{route_id}/shape", response_model=ApiResponse[list[ShapePointModel]])
+async def get_route_shape(route_id: str) -> ApiResponse[list[ShapePointModel]]:
+    """Returns geographic shape points along a route corridor."""
+    repo = get_transit_repository()
+    shape_points = repo.get_route_shape(route_id)
+    return ApiResponse(success=True, data=shape_points)
+
+
 @router.get("/stops", response_model=ApiResponse[list[StopModel]])
 async def list_stops(
     lat: float | None = Query(None, ge=-90.0, le=90.0, description="Latitude for spatial radius query"),
     lon: float | None = Query(None, ge=-180.0, le=180.0, description="Longitude for spatial radius query"),
     radius_km: float = Query(2.0, ge=0.1, le=50.0, description="Radius in kilometers"),
     search: str | None = Query(None, description="Search stop name"),
+    limit: int | None = Query(None, ge=1, le=500, description="Optional maximum number of stops to return"),
 ) -> ApiResponse[list[StopModel]]:
     """Returns bus stops, optionally filtered by spatial radius or name search."""
     repo = get_transit_repository()
-    stops = repo.get_all_stops(lat=lat, lon=lon, radius_km=radius_km, search=search)
+    stops = repo.get_all_stops(lat=lat, lon=lon, radius_km=radius_km, search=search, limit=limit)
     return ApiResponse(success=True, data=stops)
 
 

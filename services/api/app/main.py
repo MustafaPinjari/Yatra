@@ -1,3 +1,4 @@
+import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -7,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.api import api_router
 from app.core.config import get_settings
 from app.core.logging import setup_logging
+from app.integrations.gtfs_rt.processor import get_vehicle_processor
 from app.middleware.error_handler import global_exception_handler
 from app.schemas.common import ApiResponse, HealthResponse
 
@@ -16,7 +18,10 @@ setup_logging(settings.LOG_LEVEL)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    # Startup actions
+    # Non-blocking background startup poll for GTFS-RT feed
+    processor = get_vehicle_processor()
+    if processor.client.is_configured:
+        asyncio.create_task(processor.poll_and_process())
     yield
     # Shutdown actions
 

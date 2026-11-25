@@ -78,11 +78,13 @@ class CrowdingEstimateResponse(BaseModel):
     confidence_level: str
     etm_sample_factor: float
     wheelchair_space_available: bool
-    provenance: str = "SAMPLE_BASED_INFERENCE"
+    provenance: str = "ESTIMATED_RELATIVE_HEURISTIC"
     expansion_factor_status: str = "UNCALIBRATED_HYPOTHESIS"
     sample_rate_percent: float = 3.5
-    uncertainty_margin_percent: float = 18.5
-    limitation_note: str | None = "Universal 28.5x expansion factor is uncalibrated without full conductor ETM records."
+    sample_rate_status: str = "UNVERIFIED_PLANNING_HYPOTHESIS"
+    uncertainty_rating: str = "UNVERIFIED_HEURISTIC"
+    uncertainty_margin_percent: float | None = None
+    limitation_note: str | None = "YATRA estimates relative crowding using available operational signals, including vehicle headway deviations. It does not claim exact onboard passenger counts. ETM sampling assumptions have not yet been independently calibrated."
 
 
 # ==============================================================================
@@ -91,14 +93,20 @@ class CrowdingEstimateResponse(BaseModel):
 
 class OdMatrixResponse(BaseModel):
     time_period: str
+    time_period_description: str = "3-hour morning peak period (08:00–11:00) modeled transit trips across 7 TAZ zones"
     algorithm: str = "Biproportional Fitting (Furness IPF) with Distance Impedance"
     iterations_run: int
     converged: bool
     total_passenger_trips: int
+    total_estimated_trips: int = 546143
+    total_estimated_bus_trips: int = 294917
+    total_observed_metro_trips: int = 251226
     zones: list[dict[str, Any]]
     matrix: list[list[int]]
     desire_lines_geojson: dict[str, Any]
-    data_provenance: str = "ESTIMATED_VIA_MPD2021_AND_DTC_DEPOT_FLOWS"
+    data_provenance: str = "SCENARIO_ESTIMATED_VIA_MPD2021_AND_DTC_DEPOT_FLOWS"
+    mode_share_note: str = "Mode split (46% Metro / 54% Bus) is an assumed scenario proportion applied across the total modeled volume based on published aggregate DMRC and DTC reports; it does not represent independently synchronized censuses."
+    convergence_explanation: str = "Furness IPF balances estimated trip generation and attraction marginals. Its convergence does not independently establish the true passenger origin-destination distribution."
     marginal_preservation_error_percent: float = 0.01
     distance_decay_parameter: float = 0.08
     limitation_note: str | None = "Trip marginals derived from depot operational capacity and DMRC footfalls."
@@ -139,10 +147,15 @@ class RoadWidthCheckResponse(BaseModel):
     v: str | None = None
     name: str | None = None
     carriageway_width_m: float | None = None
+    planning_width_row_m: float | None = None
+    field_measured_width_m: float | None = None
+    width_provenance: str = "MPD_2021_ROW_ESTIMATED"
+    is_field_verified: bool = False
     min_required_width_m: float
     is_bus_eligible: bool
     transport_mode_allowed: str
     regulatory_violation: str | None = None
+    compliance_disclosure: str = "Candidate paths satisfy the model's 6-metre planning-width constraint using available planning estimates. Unknown-width roads are rejected. Physical carriageway compliance requires field verification."
 
 
 # ==============================================================================
@@ -168,6 +181,7 @@ class SegmentLoadResponse(BaseModel):
     estimation_method: str = "PROPORTIONAL_GRAVITY_DECAY"
     mathematical_conservation_satisfied: bool = True
     flow_conservation_note: str | None = None
+    terminal_residual_explanation: str = "Terminal residual is identically 0.0 because it is enforced by the conservation identity sum(B) == sum(A); it is a mathematical boundary condition of the model, not an empirical field validation."
     accuracy_disclaimer: str = "Inferred load; real-world accuracy bounded by missing alighting censuses (accumulating margin ±5% to ±25% along route)."
 
 
@@ -217,11 +231,22 @@ class FeederEvEnergyResponse(BaseModel):
     daily_trips_scheduled: int
     daily_distance_km: float
     ev_nominal_battery_capacity_kwh: float
+    usable_depth_of_discharge: float = 0.80
     usable_battery_capacity_kwh: float
     specific_energy_consumption_kwh_km: float
     energy_consumed_per_loop_kwh: float
     total_daily_energy_consumed_kwh: float
+    complete_loops_before_recharge: int = 21
     loops_before_mandatory_recharge: int
+    theoretical_range_km: float = 125.22
+    opportunity_charging_duration_minutes: float = 45.0
+    opportunity_charging_energy_kwh: float = 45.0
+    opportunity_charging_additional_range_km: float = 39.13
+    opportunity_charging_additional_loops: int = 6
+    opportunity_charging_net_energy_kwh: float = 41.40
+    opportunity_charging_net_range_km: float = 36.00
+    opportunity_charging_net_loops: int = 6
+    charger_efficiency: float = 0.92
     requires_midday_opportunity_charge: bool
     depot_fast_charger_power_kw: float
     estimated_opportunity_topup_minutes: float
@@ -229,6 +254,7 @@ class FeederEvEnergyResponse(BaseModel):
     full_daily_recharge_time_hours: float
     charging_regime: str
     provenance: str
+    epistemic_classification: str = "SCENARIO_MODEL"
 
 
 class MetroCorridorLoadResponse(BaseModel):

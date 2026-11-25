@@ -79,10 +79,60 @@ def test_feeder_headway_sensitivity():
 
 def test_feeder_ev_energy_model():
     engine = FeederOptimizerEngine()
-    res = engine.compute_feeder_ev_energy_model(daily_trips=16)
+    # Test canonical 5.7 km loop
+    res = engine.compute_feeder_ev_energy_model(daily_trips=16, loop_distance_km=5.7)
     assert res["ev_nominal_battery_capacity_kwh"] == 180.0
+    assert res["usable_depth_of_discharge"] == 0.80
     assert res["usable_battery_capacity_kwh"] == 144.0
     assert res["specific_energy_consumption_kwh_km"] == 1.15
+    assert res["loop_distance_km"] == 5.7
+
+    # Loop energy: 5.7 * 1.15 = 6.555 kWh (rounded to 6.56)
+    assert res["energy_consumed_per_loop_kwh"] == 6.56
+
+    # Complete loops before usable energy exhausted: floor(144.0 / 6.555) = 21 complete loops
+    # (Corrects previous erroneous claim of 27 loops which confused nominal 180 kWh with usable 144 kWh)
+    assert res["complete_loops_before_recharge"] == 21
+    assert res["loops_before_mandatory_recharge"] == 21
+
+    # Theoretical maximum single-charge operating range on usable energy: 144.0 / 1.15 = 125.22 km
+    assert res["theoretical_range_km"] == 125.22
+
+    # 45-min opportunity charging at 60 kW:
+    # Ideal theoretical energy: 60 * 0.75 = 45.0 kWh
+    assert res["opportunity_charging_duration_minutes"] == 45.0
+    assert res["opportunity_charging_energy_kwh"] == 45.0
+    # Additional theoretical range from ideal 45 kWh: 45.0 / 1.15 = 39.13 km
+    assert res["opportunity_charging_additional_range_km"] == 39.13
+    # Additional complete loops from ideal 45 kWh: floor(45.0 / 6.555) = 6 complete loops
+    assert res["opportunity_charging_additional_loops"] == 6
+
+    # Net delivered energy accounting for documented 92% charger efficiency:
+    # 45.0 * 0.92 = 41.4 kWh
+    assert res["opportunity_charging_net_energy_kwh"] == 41.40
+    assert res["opportunity_charging_net_range_km"] == 36.00
+    assert res["opportunity_charging_net_loops"] == 6
+
     assert res["depot_fast_charger_power_kw"] == 60.0
-    assert res["loops_before_mandatory_recharge"] > 0
     assert res["full_daily_recharge_time_hours"] > 0.0
+
+
+def test_feeder_ev_energy_model_edge_cases():
+    engine = FeederOptimizerEngine()
+
+    # Edge case 1: Zero loop distance
+    zero_dist = engine.compute_feeder_ev_energy_model(loop_distance_km=0.0)
+    assert zero_dist["complete_loops_before_recharge"] == 0
+    assert zero_dist["theoretical_range_km"] == 0.0
+    assert zero_dist["energy_consumed_per_loop_kwh"] == 0.0
+
+    # Edge case 2: Negative loop distance
+    neg_dist = engine.compute_feeder_ev_energy_model(loop_distance_km=-5.0)
+    assert neg_dist["complete_loops_before_recharge"] == 0
+    assert neg_dist["theoretical_range_km"] == 0.0
+
+    # Edge case 3: Exact 144 km route (exactly 1 loop before recharge)
+    long_route = engine.compute_feeder_ev_energy_model(loop_distance_km=100.0)
+    # Energy: 100 * 1.15 = 115 kWh -> floor(144 / 115) = 1 loop
+    assert long_route["complete_loops_before_recharge"] == 1
+    assert long_route["theoretical_range_km"] == 125.22

@@ -10,6 +10,12 @@
     "@contracts/=blockchain/contracts/"
   ],
   "solidity.compileUsingRemoteVersion": "v0.8.24",
-  "solidity.defaultCompiler": "remote"
+  "solidity.defaultCompiler": "remote",
+  "python.analysis.extraPaths": [
+    "services/api"
+  ],
+  "python.autoComplete.extraPaths": [
+    "services/api"
+  ]
 }
 

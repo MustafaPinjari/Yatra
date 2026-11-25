@@ -14,11 +14,11 @@ class AccessibleStopsScreen extends StatefulWidget {
 }
 
 class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
-  bool _filterRamp = true;
+  bool _filterRamp = false;
   bool _filterTactile = false;
   bool _filterAudio = false;
 
-  final List<Map<String, dynamic>> _stops = [
+  final List<Map<String, dynamic>> _stops = const [
     {
       'name': 'Central Secretariat (ISBT Bay 1 & 2)',
       'distance': '180m away',
@@ -26,7 +26,7 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
       'hasRamp': true,
       'hasTactile': true,
       'hasAudio': true,
-      'curbHeight': '14 cm (Level Boarding)',
+      'curbHeight': '14 cm (level boarding)',
       'routes': ['502', 'TMS(+)', '419'],
       'txHash': '0x7a3...e91',
     },
@@ -37,7 +37,7 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
       'hasRamp': true,
       'hasTactile': true,
       'hasAudio': true,
-      'curbHeight': '15 cm (Step-Free)',
+      'curbHeight': '15 cm (step-free)',
       'routes': ['108', '502', 'Airport Feeder'],
       'txHash': '0x4b1...8c2',
     },
@@ -48,7 +48,7 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
       'hasRamp': true,
       'hasTactile': false,
       'hasAudio': true,
-      'curbHeight': '18 cm (Ramp Required)',
+      'curbHeight': '18 cm (ramp required)',
       'routes': ['419', '505', 'TMS(-)'],
       'txHash': '0x8d2...3f0',
     },
@@ -59,21 +59,41 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
       'hasRamp': true,
       'hasTactile': true,
       'hasAudio': true,
-      'curbHeight': '14 cm (Level Boarding)',
+      'curbHeight': '14 cm (level boarding)',
       'routes': ['502', '522', '419'],
       'txHash': '0x1c9...7a4',
     },
   ];
 
+  List<Map<String, dynamic>> get _filteredStops {
+    return _stops.where((stop) {
+      if (_filterRamp && !(stop['hasRamp'] as bool)) return false;
+      if (_filterTactile && !(stop['hasTactile'] as bool)) return false;
+      if (_filterAudio && !(stop['hasAudio'] as bool)) return false;
+      return true;
+    }).toList();
+  }
+
+  void _handleBack() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/home');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final displayedStops = _filteredStops;
+
     return Scaffold(
       backgroundColor: YatraColors.parchmentBg,
       appBar: AppBar(
-        title: Text('Accessible Stops', style: YatraTypography.sectionTitle(fontSize: 18)),
+        title: Text('Accessible stops', style: YatraTypography.sectionTitle(fontSize: 18)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          tooltip: 'Back',
+          onPressed: _handleBack,
         ),
       ),
       body: YatraWaveBackground(
@@ -118,7 +138,7 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Stop ratings based on curb height, tactile paving, and audio announcements.',
+                            'Stop ratings based on curb height, tactile paving, and audio announcements',
                             style: YatraTypography.bodySans(fontSize: 11, color: YatraColors.inkSecondary),
                           ),
                         ],
@@ -190,134 +210,185 @@ class _AccessibleStopsScreenState extends State<AccessibleStopsScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Stop Cards
-              ..._stops.map((stop) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 14.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(YatraRadii.card),
-                      side: const BorderSide(color: YatraColors.softBorder, width: 1.2),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      stop['name'] as String,
-                                      style: YatraTypography.sectionTitle(fontSize: 16),
+              // Empty State or Stop Cards
+              if (displayedStops.isEmpty)
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: YatraColors.surfaceCream,
+                    borderRadius: BorderRadius.circular(YatraRadii.card),
+                    border: Border.all(color: YatraColors.softBorder),
+                  ),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.filter_alt_off, size: 36, color: YatraColors.inkMuted),
+                      const SizedBox(height: 8),
+                      Text(
+                        'No stops match all selected filters',
+                        style: YatraTypography.sectionTitle(fontSize: 14),
+                      ),
+                      const SizedBox(height: 4),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _filterRamp = false;
+                            _filterTactile = false;
+                            _filterAudio = false;
+                          });
+                        },
+                        child: const Text('Reset filters'),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                ...displayedStops.map((stop) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 14.0),
+                    child: Card(
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(YatraRadii.card),
+                        side: const BorderSide(color: YatraColors.softBorder, width: 1.2),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        stop['name'] as String,
+                                        style: YatraTypography.sectionTitle(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        stop['distance'] as String,
+                                        style: YatraTypography.bodySans(fontSize: 12, color: YatraColors.inkMuted),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                                  decoration: BoxDecoration(
+                                    color: (stop['score'] as int) >= 90 ? YatraColors.paleGreen : YatraColors.paleAmber,
+                                    borderRadius: BorderRadius.circular(YatraRadii.sm),
+                                    border: Border.all(
+                                      color: (stop['score'] as int) >= 90 ? YatraColors.heritageGreen : YatraColors.amberWarning,
                                     ),
-                                    const SizedBox(height: 2),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        '${stop['score']}',
+                                        style: TextStyle(
+                                          fontFamily: 'Playfair Display',
+                                          fontFeatures: const [FontFeature.tabularFigures()],
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w800,
+                                          color: (stop['score'] as int) >= 90 ? YatraColors.heritageGreen : YatraColors.amberWarning,
+                                        ),
+                                      ),
+                                      Text(
+                                        '/ 100',
+                                        style: TextStyle(
+                                          fontFamily: 'Inter',
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                          color: (stop['score'] as int) >= 90 ? YatraColors.heritageGreen : YatraColors.amberWarning,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+
+                            // Accessibility Feature Badges
+                            Wrap(
+                              spacing: 6,
+                              runSpacing: 6,
+                              children: [
+                                if (stop['hasRamp'] as bool)
+                                  const _FeatureBadge(label: 'Ramp accessible', icon: Icons.accessible, color: YatraColors.heritageGreen),
+                                if (stop['hasTactile'] as bool)
+                                  const _FeatureBadge(label: 'Tactile paving', icon: Icons.straighten, color: YatraColors.amberWarning),
+                                if (stop['hasAudio'] as bool)
+                                  const _FeatureBadge(label: 'Audio beacon', icon: Icons.volume_up, color: YatraColors.navyDeep),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+
+                            Text(
+                              'Curb: ${stop['curbHeight']}',
+                              style: const TextStyle(fontFamily: 'Inter', fontSize: 12, color: YatraColors.inkSecondary),
+                            ),
+                            const Divider(height: 20),
+
+                            // Routes Serving & Blockchain Hash
+                            Row(
+                              children: [
+                                const Text(
+                                  'Routes: ',
+                                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.bold),
+                                ),
+                                ...(stop['routes'] as List<String>).map((r) => Container(
+                                      margin: const EdgeInsets.only(right: 4),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                      decoration: BoxDecoration(
+                                        color: YatraColors.parchmentBg,
+                                        borderRadius: BorderRadius.circular(YatraRadii.sm / 2),
+                                      ),
+                                      child: Text(
+                                        r,
+                                        style: const TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.bold),
+                                      ),
+                                    )),
+                                const Spacer(),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.link, size: 12, color: YatraColors.inkMuted),
+                                    const SizedBox(width: 2),
                                     Text(
-                                      stop['distance'] as String,
-                                      style: YatraTypography.bodySans(fontSize: 12, color: YatraColors.inkMuted),
+                                      'Ledger ${stop['txHash']}',
+                                      style: const TextStyle(fontFamily: 'Inter', fontSize: 10, color: YatraColors.inkMuted),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: (stop['score'] as int) >= 90 ? YatraColors.paleGreen : YatraColors.paleAmber,
-                                  borderRadius: BorderRadius.circular(YatraRadii.sm),
-                                  border: Border.all(
-                                    color: (stop['score'] as int) >= 90 ? YatraColors.heritageGreen : YatraColors.amberWarning,
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            SizedBox(
+                              width: double.infinity,
+                              child: OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(YatraRadii.button),
                                   ),
                                 ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      '${stop['score']}',
-                                      style: TextStyle(
-                                        fontFamily: 'Playfair Display',
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w800,
-                                        color: (stop['score'] as int) >= 90 ? YatraColors.heritageGreen : YatraColors.amberWarning,
-                                      ),
-                                    ),
-                                    Text(
-                                      '/ 100',
-                                      style: TextStyle(
-                                        fontFamily: 'Inter',
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.bold,
-                                        color: (stop['score'] as int) >= 90 ? YatraColors.heritageGreen : YatraColors.amberWarning,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                onPressed: () {
+                                  context.go('/planner');
+                                },
+                                icon: const Icon(Icons.alt_route, size: 16),
+                                label: const Text('Plan journey from this stop', style: TextStyle(fontSize: 12)),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-
-                          // Accessibility Feature Badges
-                          Wrap(
-                            spacing: 6,
-                            runSpacing: 6,
-                            children: [
-                              if (stop['hasRamp'] as bool)
-                                _FeatureBadge(label: 'Ramp accessible', icon: Icons.accessible, color: YatraColors.heritageGreen),
-                              if (stop['hasTactile'] as bool)
-                                _FeatureBadge(label: 'Tactile paving', icon: Icons.straighten, color: YatraColors.amberWarning),
-                              if (stop['hasAudio'] as bool)
-                                _FeatureBadge(label: 'Audio beacon', icon: Icons.volume_up, color: YatraColors.navyDeep),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-
-                          Text(
-                            'Curb: ${stop['curbHeight']}',
-                            style: TextStyle(fontFamily: 'Inter', fontSize: 12, color: YatraColors.inkSecondary),
-                          ),
-                          const Divider(height: 20),
-
-                          // Routes Serving & Blockchain Hash
-                          Row(
-                            children: [
-                              const Text(
-                                'Routes: ',
-                                style: TextStyle(fontFamily: 'Inter', fontSize: 11, fontWeight: FontWeight.bold),
-                              ),
-                              ...(stop['routes'] as List<String>).map((r) => Container(
-                                    margin: const EdgeInsets.only(right: 4),
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: YatraColors.parchmentBg,
-                                      borderRadius: BorderRadius.circular(YatraRadii.sm / 2),
-                                    ),
-                                    child: Text(
-                                      r,
-                                      style: const TextStyle(fontFamily: 'Inter', fontSize: 10, fontWeight: FontWeight.bold),
-                                    ),
-                                  )),
-                              const Spacer(),
-                              Row(
-                                children: [
-                                  const Icon(Icons.link, size: 12, color: YatraColors.inkMuted),
-                                  const SizedBox(width: 2),
-                                  Text(
-                                    'Ledger ${stop['txHash']}',
-                                    style: const TextStyle(fontFamily: 'Inter', fontSize: 10, color: YatraColors.inkMuted),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }),
+                  );
+                }),
             ],
           ),
         ),

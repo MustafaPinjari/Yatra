@@ -131,14 +131,18 @@ class VehiclePositionModel(BaseModel):
 
 
 class GtfsRtHealthResponse(BaseModel):
-    status: str  # "OPERATIONAL", "STALE_DATA", "API_ERROR", "UNCONFIGURED"
+    status: str  # "OPERATIONAL", "STALE_DATA", "API_ERROR", "UNCONFIGURED", "UNAVAILABLE"
     api_endpoint_configured: bool
     api_key_configured: bool
     last_poll_timestamp: str | None = None
+    last_successful_poll_timestamp: str | None = None
     last_poll_latency_ms: float = 0.0
+    network_latency_ms: float = 0.0
+    protobuf_decode_ms: float = 0.0
     total_active_vehicles: int = 0
     fresh_vehicles_count: int = 0
     stale_vehicles_count: int = 0
+    active_routes_count: int = 0
     http_status_code: int | None = None
     error_message: str | None = None
     data_provider: str = "Delhi Transport Stack (DTS) GTFS-RT"

@@ -10,7 +10,7 @@ interface MetricCardProps {
     value: string;
     isPositive: boolean;
   };
-  accentColor?: "indigo" | "emerald" | "amber" | "rose";
+  accentColor?: "terracotta" | "emerald" | "amber" | "navy";
 }
 
 export function MetricCard({
@@ -19,39 +19,52 @@ export function MetricCard({
   subtitle,
   icon: Icon,
   trend,
-  accentColor = "indigo",
+  accentColor = "terracotta",
 }: MetricCardProps) {
   const colorStyles = {
-    indigo: "bg-indigo-50 text-indigo-700 border-indigo-100",
-    emerald: "bg-emerald-50 text-emerald-700 border-emerald-100",
-    amber: "bg-amber-50 text-amber-700 border-amber-100",
-    rose: "bg-rose-50 text-rose-700 border-rose-100",
+    terracotta: {
+      iconBg: "bg-[#E96835]/10 text-[#E96835] border-[#E96835]/25",
+      badge: "text-[#E96835]",
+    },
+    emerald: {
+      iconBg: "bg-[#16764C]/10 text-[#16764C] border-[#16764C]/25",
+      badge: "text-[#16764C]",
+    },
+    amber: {
+      iconBg: "bg-[#D97706]/10 text-[#D97706] border-[#D97706]/25",
+      badge: "text-[#D97706]",
+    },
+    navy: {
+      iconBg: "bg-[#101B3A]/10 text-[#101B3A] border-[#101B3A]/25",
+      badge: "text-[#101B3A]",
+    },
   };
 
+  const selected = colorStyles[accentColor];
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-all hover:shadow">
+    <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial transition-all hover:shadow-editorial-lg">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-slate-500">{title}</span>
-        <div className={`rounded-lg p-2.5 border ${colorStyles[accentColor]}`}>
-          <Icon className="h-5 w-5" aria-hidden="true" />
+        <span className="text-xs font-semibold text-[#64748B] tracking-normal">{title}</span>
+        <div className={`rounded-xl p-2.5 border ${selected.iconBg}`}>
+          <Icon className="h-4 w-4" aria-hidden="true" />
         </div>
       </div>
       <div className="mt-3 flex items-baseline gap-2">
-        <span className="text-2xl font-bold tracking-tight text-slate-900">
+        <span className="font-editorial-serif text-3xl font-extrabold text-[#101B3A] tabular-nums">
           {value}
         </span>
         {trend && (
           <span
-            className={`text-xs font-semibold ${
-              trend.isPositive ? "text-emerald-600" : "text-rose-600"
+            className={`text-xs font-semibold tabular-nums ${
+              trend.isPositive ? "text-[#16764C]" : "text-[#DC2626]"
             }`}
           >
             {trend.value}
           </span>
         )}
       </div>
-      <p className="mt-1 text-xs text-slate-500">{subtitle}</p>
+      <p className="mt-1 text-xs text-[#64748B]">{subtitle}</p>
     </div>
   );
 }
-

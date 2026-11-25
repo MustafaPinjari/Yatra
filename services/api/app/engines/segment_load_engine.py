@@ -100,22 +100,28 @@ class SegmentLoadEngine:
         """
         route_stops = self.repo.get_route_stops(route_id)
         if not route_stops:
-            # Fallback canonical stops for demonstration
-            stop_names = [
-                "ISBT Kashmere Gate Terminal",
-                "Mori Gate Crossing",
-                "Red Fort / Chandni Chowk",
-                "Delhi Gate",
-                "ITO Ring Road",
-                "Pragati Maidan / Supreme Court",
-                "Sundar Nagar",
-                "Nizamuddin Dargah",
-                "Ashram Chowk Crossing",
-                "Lajpat Nagar Ring Road",
-                "Moolchand Hospital",
-                "AIIMS Metro / Safdarjung Hospital",
-            ]
-            stop_ids = [f"STOP_{i+1:03d}" for i in range(len(stop_names))]
+            if boardings_input is not None and len(boardings_input) > 0:
+                # Custom synthetic stops matching the input length for testing/simulation
+                n_stops = len(boardings_input)
+                stop_names = [f"Test Stop {i+1}" for i in range(n_stops)]
+                stop_ids = [f"STOP_{i+1:03d}" for i in range(n_stops)]
+            else:
+                # Fallback canonical stops for demonstration
+                stop_names = [
+                    "ISBT Kashmere Gate Terminal",
+                    "Mori Gate Crossing",
+                    "Red Fort / Chandni Chowk",
+                    "Delhi Gate",
+                    "ITO Ring Road",
+                    "Pragati Maidan / Supreme Court",
+                    "Sundar Nagar",
+                    "Nizamuddin Dargah",
+                    "Ashram Chowk Crossing",
+                    "Lajpat Nagar Ring Road",
+                    "Moolchand Hospital",
+                    "AIIMS Metro / Safdarjung Hospital",
+                ]
+                stop_ids = [f"STOP_{i+1:03d}" for i in range(len(stop_names))]
         else:
             stop_ids = [s.stop_id for s in route_stops]
             stop_names = [s.stop_name for s in route_stops]
@@ -124,8 +130,12 @@ class SegmentLoadEngine:
         bus_capacity = capacity or self.DEFAULT_BUS_NOMINAL_CAPACITY
 
         # 1. Determine Boardings
-        if boardings_input and len(boardings_input) == n:
-            boardings = [float(b) for b in boardings_input]
+        if boardings_input is not None:
+            if len(boardings_input) == 0:
+                raise ValueError("boardings_input cannot be empty")
+            if len(boardings_input) != n:
+                raise ValueError(f"boardings_input length ({len(boardings_input)}) must match stop count ({n})")
+            boardings = [max(0.0, float(b)) for b in boardings_input]
         else:
             # Synthesize realistic peak-hour ETM boarding counts
             # Higher boarding at terminals and major interchanges
@@ -148,9 +158,11 @@ class SegmentLoadEngine:
                 boardings.append(round(b, 1))
 
         # 2. Determine Alightings
-        if alightings_input and len(alightings_input) == n:
-            observed_alightings: list[float | None] = [float(a) for a in alightings_input]
-            estimated_alightings = [float(a) for a in alightings_input]
+        if alightings_input is not None:
+            if len(alightings_input) != n:
+                raise ValueError(f"alightings_input length ({len(alightings_input)}) must match stop count ({n})")
+            observed_alightings: list[float | None] = [max(0.0, float(a)) for a in alightings_input]
+            estimated_alightings = [max(0.0, float(a)) for a in alightings_input]
             is_alighting_estimated = False
         else:
             # Electronic Ticketing Machines (ETM) in Delhi only record boarding taps.
@@ -266,7 +278,15 @@ class SegmentLoadEngine:
             "data_provenance": "GTFS_ROUTE_SEQUENCE_WITH_ESTIMATED_ALIGHTINGS",
             "estimation_method": "PROPORTIONAL_GRAVITY_DECAY",
             "mathematical_conservation_satisfied": True,
-            "flow_conservation_note": "Passenger conservation (L_i = L_{i-1} + B_i - A_i) is a mathematical consistency identity; it does not constitute empirical proof of in-vehicle occupancy without onboard automated passenger counters (APC) or alighting sensors.",
+            "flow_conservation_note": (
+                "Passenger conservation (L_i = L_{i-1} + B_i - A_i with L_0 = 0 and L_n = 0) is a mathematical "
+                "consistency identity and model boundary condition. It does not constitute independent empirical "
+                "validation of onboard occupancy without automated passenger counters (APC) or alighting sensors."
+            ),
+            "terminal_residual_explanation": (
+                "Terminal residual is identically 0.0 because it is enforced by the conservation identity "
+                "sum(B) == sum(A); it is a mathematical boundary condition of the model, not an empirical field validation."
+            ),
             "accuracy_disclaimer": "Inferred load; real-world accuracy bounded by missing alighting censuses (accumulating margin ±5% to ±25% along route).",
         }
 

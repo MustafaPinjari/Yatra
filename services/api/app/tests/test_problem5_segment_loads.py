@@ -79,3 +79,39 @@ def test_segment_load_uncertainty_and_provenance():
         assert seg["passenger_load_lower_bound"] <= seg["passenger_load"]
         assert seg["passenger_load_upper_bound"] >= seg["passenger_load"]
         assert 0.0 <= seg["uncertainty_margin_percent"] <= 30.0
+
+
+def test_segment_load_boundary_conditions_and_edge_cases():
+    engine = SegmentLoadEngine()
+    res = engine.compute_route_segment_loads(route_id="route_delhi_502", departure_hour=8.5)
+
+    # Invariant: Terminal residual explanation explicitly documents model boundary condition
+    assert "boundary condition" in res["terminal_residual_explanation"]
+    assert res["conservation_residual"] < 1.0
+
+    # Test empty boardings raises ValueError
+    with pytest.raises(ValueError, match="cannot be empty"):
+        engine.compute_route_segment_loads(route_id="test_route", boardings_input=[])
+
+    # Test mismatched boardings length raises ValueError on known route
+    with pytest.raises(ValueError, match="must match stop count"):
+        engine.compute_route_segment_loads(route_id="route_delhi_502", boardings_input=[10.0, 5.0])
+
+    # Test mismatched alightings length raises ValueError
+    with pytest.raises(ValueError, match="must match stop count"):
+        engine.compute_route_segment_loads(
+            route_id="test_route",
+            boardings_input=[10.0, 5.0],
+            alightings_input=[0.0, 10.0, 5.0],
+        )
+
+    # Test negative boardings are clamped to non-negative without negative passenger loads
+    stops = engine.repo.get_route_stops("route_delhi_502")
+    n = len(stops) if stops else 12
+    boardings_with_negatives = [-10.0] + [5.0] * (n - 2) + [0.0]
+    res_clamped = engine.compute_route_segment_loads(
+        route_id="route_delhi_502",
+        boardings_input=boardings_with_negatives,
+    )
+    for seg in res_clamped["segments"]:
+        assert seg["passenger_load"] >= 0.0

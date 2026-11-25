@@ -22,10 +22,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: YatraColors.parchmentBg,
       appBar: AppBar(
-        title: Text('Accessibility Profile', style: YatraTypography.sectionTitle(fontSize: 18)),
+        title: Text('Accessibility profile', style: YatraTypography.sectionTitle(fontSize: 18)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          tooltip: 'Back',
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
         ),
       ),
       body: SafeArea(
@@ -53,13 +60,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'YATRA CONCESSION CARD',
+                        'Yatra concession pass',
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
                           color: Color(0xFFFACC15),
-                          letterSpacing: 1.2,
+                          letterSpacing: 0.5,
                         ),
                       ),
                       Container(
@@ -69,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: const Text(
-                          'VERIFIED',
+                          'Verified',
                           style: TextStyle(fontFamily: 'Inter', fontSize: 9, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),

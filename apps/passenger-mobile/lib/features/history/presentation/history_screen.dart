@@ -44,10 +44,17 @@ class TripHistoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: YatraColors.parchmentBg,
       appBar: AppBar(
-        title: Text('Trip History', style: YatraTypography.sectionTitle(fontSize: 18)),
+        title: Text('Trip history', style: YatraTypography.sectionTitle(fontSize: 18)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          tooltip: 'Back',
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
         ),
       ),
       body: SafeArea(

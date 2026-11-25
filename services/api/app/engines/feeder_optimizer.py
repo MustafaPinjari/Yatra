@@ -211,6 +211,10 @@ class FeederOptimizerEngine:
                 seg["v"],
                 length_km=seg["len"],
                 carriageway_width_m=raw_width,
+                planning_width_row_m=raw_width,
+                field_measured_width_m=None,
+                width_provenance="MPD_2021_ROW_ESTIMATED" if raw_width is not None else "UNRECORDED_UNKNOWN",
+                is_field_verified=False,
                 is_bus_eligible=is_eligible,
                 speed_kmh=seg["speed"],
                 travel_time_min=travel_time_min,
@@ -222,13 +226,19 @@ class FeederOptimizerEngine:
     def check_road_width_eligibility(self, u: str, v: str) -> dict[str, Any]:
         """Validates whether a road segment complies with the >= 6.0m carriageway width constraint."""
         edge = self.road_graph.get_edge_data(u, v)
+        compliance_disclosure = (
+            "Candidate paths satisfy the model's 6-metre planning-width constraint using available "
+            "planning estimates. Unknown-width roads are rejected. Physical carriageway compliance "
+            "requires field verification."
+        )
         if not edge:
             return {
                 "exists": False,
-                "is_eligible": False,
+                "is_bus_eligible": False,
                 "min_required_width_m": self.MIN_ROAD_WIDTH_M,
                 "transport_mode_allowed": "None",
                 "regulatory_violation": f"No road segment recorded between {u} and {v}",
+                "compliance_disclosure": compliance_disclosure,
             }
 
         width = edge["carriageway_width_m"]
@@ -239,10 +249,15 @@ class FeederOptimizerEngine:
                 "v": v,
                 "name": edge["name"],
                 "carriageway_width_m": None,
+                "planning_width_row_m": None,
+                "field_measured_width_m": None,
+                "width_provenance": "UNRECORDED_UNKNOWN",
+                "is_field_verified": False,
                 "min_required_width_m": self.MIN_ROAD_WIDTH_M,
                 "is_bus_eligible": False,
                 "transport_mode_allowed": "Unknown / Unsurveyed",
                 "regulatory_violation": "Carriageway width is unknown or unverified; unverified roads cannot be certified for bus transit",
+                "compliance_disclosure": compliance_disclosure,
             }
 
         is_eligible = width >= self.MIN_ROAD_WIDTH_M
@@ -253,10 +268,15 @@ class FeederOptimizerEngine:
             "v": v,
             "name": edge["name"],
             "carriageway_width_m": width,
+            "planning_width_row_m": width,
+            "field_measured_width_m": None,
+            "width_provenance": "MPD_2021_ROW_ESTIMATED",
+            "is_field_verified": False,
             "min_required_width_m": self.MIN_ROAD_WIDTH_M,
             "is_bus_eligible": is_eligible,
             "transport_mode_allowed": "Electric Feeder Bus (Standard/Midi)" if is_eligible else "E-Rickshaw / Pedestrian Feeder Only",
             "regulatory_violation": None if is_eligible else "Carriageway width is below 6.0m minimum standard for transit bus operations",
+            "compliance_disclosure": compliance_disclosure,
         }
 
     def generate_candidate_feeder_loops(
@@ -339,7 +359,15 @@ class FeederOptimizerEngine:
                     "length_km": round(total_length_km, 2),
                     "length_constraint_passed": total_length_km <= route_cap_km,
                     "min_carriageway_width_m": round(min_width, 1),
+                    "min_planning_width_row_m": round(min_width, 1),
+                    "width_provenance": "MPD_2021_ROW_ESTIMATED",
+                    "is_field_verified": False,
                     "width_constraint_passed": min_width >= self.MIN_ROAD_WIDTH_M,
+                    "compliance_disclosure": (
+                        "Candidate paths satisfy the model's 6-metre planning-width constraint using available "
+                        "planning estimates. Unknown-width roads are rejected. Physical carriageway compliance "
+                        "requires field verification."
+                    ),
                     "corridor_names": road_names,
                     "cycle_time_minutes": round(cycle_time_min, 1),
                     "buses_required": buses_needed,
@@ -403,6 +431,14 @@ class FeederOptimizerEngine:
             "max_route_length_cap_km": max_route_length_km,
             "all_routes_under_length_cap": all(r["length_km"] <= max_route_length_km for r in allocated_routes),
             "min_carriageway_width_enforced_m": self.MIN_ROAD_WIDTH_M,
+            "min_planning_width_enforced_m": self.MIN_ROAD_WIDTH_M,
+            "road_width_provenance": "DELHI_MASTER_PLAN_2021_ROW_STANDARDS",
+            "is_field_verified": False,
+            "width_compliance_disclosure": (
+                "Candidate paths satisfy the model's 6-metre planning-width constraint using available "
+                "planning estimates. Unknown-width roads are rejected. Physical carriageway compliance "
+                "requires field verification."
+            ),
             "all_roads_eligible": all(r["min_carriageway_width_m"] >= self.MIN_ROAD_WIDTH_M for r in allocated_routes),
             "target_headway_range": f"{self.MIN_HEADWAY_MIN:.0f}-{self.MAX_HEADWAY_MIN:.0f} min",
             "allocated_routes": allocated_routes,
@@ -448,43 +484,101 @@ class FeederOptimizerEngine:
         self,
         route_id: str | None = None,
         daily_trips: int = 16,
+        loop_distance_km: float | None = None,
     ) -> dict[str, Any]:
         """Calculates electric vehicle battery consumption, charging requirements,
-
         and depot operational schedule for feeder loops.
-        - Battery capacity: 180 kWh nominal (9m midi low-floor EV bus)
-        - Depth of discharge (DoD): 80% usable (144 kWh)
+        - Nominal battery capacity: 180.0 kWh (9m midi low-floor EV bus)
+        - Usable depth of discharge (DoD): 80% (144.0 kWh usable energy)
         - Specific energy consumption: 1.15 kWh/km (including Delhi summer HVAC)
-        - Depot charger: 60 kW DC CCS-2 fast charger (92% charging efficiency)
+        - Average feeder loop: 5.7 km (or route-specific length)
+        - Depot fast charger: 60 kW DC charger
+        - Opportunity charging session: 45 minutes (0.75 h)
         """
         nominal_battery_kwh = 180.0
-        usable_battery_kwh = nominal_battery_kwh * 0.80  # 144 kWh
+        usable_dod = 0.80
+        usable_battery_kwh = nominal_battery_kwh * usable_dod  # 144.0 kWh
         specific_consumption_kwh_per_km = 1.15
         charger_power_kw = 60.0
-        charger_efficiency = 0.92
+        charger_efficiency = 0.92  # Documented DC fast charging efficiency
+        opportunity_charging_minutes = 45.0
+        opportunity_charging_hours = opportunity_charging_minutes / 60.0  # 0.75 h
 
-        # Find route or use network average
-        allocated = self.optimize_network_feeder_fleet()["allocated_routes"]
-        target_route = None
+        # Determine loop distance: explicit argument -> target route -> canonical average (5.7 km)
+        rid = "CANONICAL_FEEDER"
+        rname = "Delhi Metro Hub Average Feeder"
+        length_km = loop_distance_km if loop_distance_km is not None else 5.7
+
         if route_id:
+            allocated = self.optimize_network_feeder_fleet()["allocated_routes"]
             for r in allocated:
                 if r["route_id"] == route_id:
-                    target_route = r
+                    rid = r["route_id"]
+                    rname = r["metro_station_name"]
+                    if loop_distance_km is None:
+                        length_km = r["length_km"]
                     break
-        if not target_route and allocated:
-            target_route = allocated[0]
 
-        length_km = target_route["length_km"] if target_route else 5.8
-        rid = target_route["route_id"] if target_route else "CANONICAL_FEEDER"
-        rname = target_route["metro_station_name"] if target_route else "Delhi Metro Hub"
+        # Handle edge cases (zero or negative inputs)
+        if length_km <= 0 or specific_consumption_kwh_per_km <= 0:
+            return {
+                "route_id": rid,
+                "metro_hub": rname,
+                "loop_distance_km": max(0.0, length_km),
+                "daily_trips_scheduled": daily_trips,
+                "daily_distance_km": 0.0,
+                "ev_nominal_battery_capacity_kwh": nominal_battery_kwh,
+                "usable_depth_of_discharge": usable_dod,
+                "usable_battery_capacity_kwh": usable_battery_kwh,
+                "specific_energy_consumption_kwh_km": max(0.0, specific_consumption_kwh_per_km),
+                "energy_consumed_per_loop_kwh": 0.0,
+                "total_daily_energy_consumed_kwh": 0.0,
+                "complete_loops_before_recharge": 0,
+                "loops_before_mandatory_recharge": 0,
+                "theoretical_range_km": 0.0,
+                "opportunity_charging_duration_minutes": opportunity_charging_minutes,
+                "opportunity_charging_energy_kwh": 0.0,
+                "opportunity_charging_additional_range_km": 0.0,
+                "opportunity_charging_additional_loops": 0,
+                "opportunity_charging_net_energy_kwh": 0.0,
+                "opportunity_charging_net_range_km": 0.0,
+                "opportunity_charging_net_loops": 0,
+                "charger_efficiency": charger_efficiency,
+                "requires_midday_opportunity_charge": False,
+                "depot_fast_charger_power_kw": charger_power_kw,
+                "estimated_opportunity_topup_minutes": 0.0,
+                "full_daily_recharge_time_minutes": 0.0,
+                "full_daily_recharge_time_hours": 0.0,
+                "charging_regime": "Invalid geometry or zero consumption parameter",
+                "provenance": "DELHI_EV_POLICY_2020_AND_DTC_ELECTRIC_FEEDER_SPECS",
+                "epistemic_classification": "SCENARIO_MODEL",
+            }
 
-        loop_energy_kwh = round(length_km * specific_consumption_kwh_per_km, 2)
+        # Exact loop energy (with epsilon to handle float round-half-to-even on .555 -> 6.56)
+        loop_energy_kwh = round(length_km * specific_consumption_kwh_per_km + 1e-6, 2)
         daily_distance_km = round(length_km * daily_trips, 2)
         daily_energy_kwh = round(daily_distance_km * specific_consumption_kwh_per_km, 2)
 
-        loops_before_recharge = max(1, math.floor(usable_battery_kwh / max(0.1, loop_energy_kwh)))
-        midday_topup_minutes = round((usable_battery_kwh * 0.40 / (charger_power_kw * charger_efficiency)) * 60.0, 1)
-        full_recharge_minutes = round((daily_energy_kwh / (charger_power_kw * charger_efficiency)) * 60.0, 1)
+        # 1. Usable energy: 144 kWh
+        # 2. Complete loops: floor(usable_energy / loop_energy)
+        exact_loop_energy = length_km * specific_consumption_kwh_per_km
+        complete_loops = math.floor(usable_battery_kwh / max(0.001, exact_loop_energy))
+        # 3. Maximum theoretical single-charge operating range on usable energy:
+        theoretical_range_km = round(usable_battery_kwh / specific_consumption_kwh_per_km, 2)
+
+        # 4. Opportunity charging in 45 min at 60 kW:
+        # Ideal theoretical upper bound (lossless):
+        charging_energy_ideal_kwh = round(charger_power_kw * opportunity_charging_hours, 2)  # 45.0 kWh
+        charging_additional_range_ideal_km = round(charging_energy_ideal_kwh / specific_consumption_kwh_per_km, 2)  # 39.13 km
+        charging_additional_loops_ideal = math.floor(charging_energy_ideal_kwh / max(0.001, loop_energy_kwh))
+
+        # Net delivered accounting for documented 92% charger efficiency:
+        charging_energy_net_kwh = round(charging_energy_ideal_kwh * charger_efficiency, 2)  # 41.40 kWh
+        charging_additional_range_net_km = round(charging_energy_net_kwh / specific_consumption_kwh_per_km, 2)  # 36.00 km
+        charging_additional_loops_net = math.floor(charging_energy_net_kwh / max(0.001, loop_energy_kwh))
+
+        midday_topup_minutes = round((usable_battery_kwh * 0.40 / (max(0.1, charger_power_kw) * charger_efficiency)) * 60.0, 1)
+        full_recharge_minutes = round((daily_energy_kwh / (max(0.1, charger_power_kw) * charger_efficiency)) * 60.0, 1)
 
         return {
             "route_id": rid,
@@ -493,18 +587,30 @@ class FeederOptimizerEngine:
             "daily_trips_scheduled": daily_trips,
             "daily_distance_km": daily_distance_km,
             "ev_nominal_battery_capacity_kwh": nominal_battery_kwh,
+            "usable_depth_of_discharge": usable_dod,
             "usable_battery_capacity_kwh": usable_battery_kwh,
             "specific_energy_consumption_kwh_km": specific_consumption_kwh_per_km,
-            "energy_consumed_per_loop_kwh": loop_energy_kwh,
+            "energy_consumed_per_loop_kwh": round(loop_energy_kwh, 2),
             "total_daily_energy_consumed_kwh": daily_energy_kwh,
-            "loops_before_mandatory_recharge": loops_before_recharge,
-            "requires_midday_opportunity_charge": daily_trips > loops_before_recharge,
+            "complete_loops_before_recharge": complete_loops,
+            "loops_before_mandatory_recharge": complete_loops,  # Preserved for backward compatibility
+            "theoretical_range_km": theoretical_range_km,
+            "opportunity_charging_duration_minutes": opportunity_charging_minutes,
+            "opportunity_charging_energy_kwh": charging_energy_ideal_kwh,
+            "opportunity_charging_additional_range_km": charging_additional_range_ideal_km,
+            "opportunity_charging_additional_loops": charging_additional_loops_ideal,
+            "opportunity_charging_net_energy_kwh": charging_energy_net_kwh,
+            "opportunity_charging_net_range_km": charging_additional_range_net_km,
+            "opportunity_charging_net_loops": charging_additional_loops_net,
+            "charger_efficiency": charger_efficiency,
+            "requires_midday_opportunity_charge": daily_trips > complete_loops,
             "depot_fast_charger_power_kw": charger_power_kw,
             "estimated_opportunity_topup_minutes": midday_topup_minutes,
             "full_daily_recharge_time_minutes": full_recharge_minutes,
             "full_daily_recharge_time_hours": round(full_recharge_minutes / 60.0, 2),
             "charging_regime": "45-min mid-day opportunity top-up at metro interchange + overnight depot slow/fast balance",
             "provenance": "DELHI_EV_POLICY_2020_AND_DTC_ELECTRIC_FEEDER_SPECS",
+            "epistemic_classification": "SCENARIO_MODEL",
         }
 
     def export_feeder_routes_geojson(self) -> dict[str, Any]:

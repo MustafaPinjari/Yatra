@@ -41,7 +41,14 @@ class NotificationsScreen extends StatelessWidget {
         title: Text('Notifications', style: YatraTypography.sectionTitle(fontSize: 18)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          tooltip: 'Back',
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              context.go('/home');
+            }
+          },
         ),
       ),
       body: SafeArea(

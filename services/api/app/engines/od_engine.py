@@ -235,6 +235,7 @@ class OdMatrixEngine:
 
         return {
             "time_period": time_period,
+            "time_period_description": "3-hour morning peak period (08:00–11:00) modeled transit trips across 7 TAZ zones",
             "convergence_status": "CONVERGED" if converged else "MAX_ITERATIONS_REACHED",
             "converged": converged,
             "iterations_performed": iteration,
@@ -253,7 +254,10 @@ class OdMatrixEngine:
                 "features": desire_features,
             },
             "methodology_note": "Biproportional Iterative Proportional Fitting (Furness) calibrated with negative exponential impedance gravity model. Reconciled against total Delhi Transit Stack daily volume.",
-            "data_provenance": "ESTIMATED_VIA_MPD2021_AND_DTC_DEPOT_FLOWS",
+            "data_provenance": "SCENARIO_ESTIMATED_VIA_MPD2021_AND_DTC_DEPOT_FLOWS",
+            "mode_share_note": "Mode split (46% Metro / 54% Bus) is an assumed scenario proportion applied across the total modeled volume based on published aggregate DMRC and DTC reports; it does not represent independently synchronized censuses.",
+            "convergence_explanation": "Furness IPF balances estimated trip generation and attraction marginals. Its convergence does not independently establish the true passenger origin-destination distribution.",
+            "epistemic_classification": "SCENARIO_MODEL",
             "marginal_preservation_error_percent": 0.01,
             "distance_decay_parameter": friction_gamma,
             "limitation_note": "Trip marginals derived from depot operational capacity and DMRC footfalls. Individual zone uncertainty ratings provided in zones metadata.",

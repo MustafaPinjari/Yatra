@@ -18,30 +18,30 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
   bool _isRequestSent = false;
   bool _isDriverAcknowledged = false;
 
-  final List<Map<String, dynamic>> _categories = [
+  final List<Map<String, dynamic>> _categories = const [
     {
-      'title': 'Wheelchair Ramp',
-      'description': 'Driver extends low-floor ramp & kneels bus upon stopping',
+      'title': 'Wheelchair ramp',
+      'description': 'Driver deploys low-floor ramp and kneels bus upon stopping',
       'icon': Icons.accessible_forward,
       'code': 'WHEELCHAIR_RAMP',
       'image': 'assets/images/wheelchair-ramp-card.png',
     },
     {
-      'title': 'Visual Guidance',
+      'title': 'Visual guidance',
       'description': 'Conductor guides from tactile paving to priority seat',
       'icon': Icons.visibility,
       'code': 'VISUAL_GUIDANCE',
       'image': 'assets/images/vision-support-card.png',
     },
     {
-      'title': 'Hearing / Visual Notice',
-      'description': 'High-contrast visual arrival beacon & cab chime',
-      'icon': Icons.hearing,
+      'title': 'Audio announcement',
+      'description': 'High-contrast visual arrival beacon and external chime',
+      'icon': Icons.volume_up,
       'code': 'HEARING_ASSIST',
       'image': 'assets/brand/yatra-brand-symbol.png',
     },
     {
-      'title': 'Extra Boarding Time',
+      'title': 'Extra boarding time',
       'description': 'Driver holds doors open for measured, safe boarding',
       'icon': Icons.timer,
       'code': 'EXTRA_TIME',
@@ -49,13 +49,21 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
     },
   ];
 
+  void _handleBack() {
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go('/home');
+    }
+  }
+
   void _handleSendRequest() {
     setState(() {
       _isRequestSent = true;
     });
 
-    // Simulate real-time driver acknowledgment via WebSocket after 1.5s
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    // Simulate real-time driver acknowledgment via WebSocket after 1.2s
+    Future.delayed(const Duration(milliseconds: 1200), () {
       if (mounted) {
         setState(() {
           _isDriverAcknowledged = true;
@@ -64,15 +72,23 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
     });
   }
 
+  void _handleCancelRequest() {
+    setState(() {
+      _isRequestSent = false;
+      _isDriverAcknowledged = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: YatraColors.parchmentBg,
       appBar: AppBar(
-        title: Text('Boarding Assistance', style: YatraTypography.sectionTitle(fontSize: 18)),
+        title: Text('Boarding assistance', style: YatraTypography.sectionTitle(fontSize: 18)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          tooltip: 'Back',
+          onPressed: _handleBack,
         ),
       ),
       body: YatraWaveBackground(
@@ -174,7 +190,7 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
 
               // Assistance Type Selector
               Text(
-                'Select Required Assistance',
+                'Select required assistance',
                 style: YatraTypography.sectionTitle(fontSize: 16),
               ),
               const SizedBox(height: 10),
@@ -267,12 +283,14 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: YatraColors.terracotta,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(YatraRadii.button),
                     ),
                   ),
                   onPressed: _handleSendRequest,
-                  icon: const Icon(Icons.send),
+                  icon: const Icon(Icons.send, size: 18),
                   label: const Text('Send boarding assistance request'),
                 ),
               ] else ...[
@@ -299,7 +317,7 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              _isDriverAcknowledged ? 'Driver Acknowledged · Ramp Ready' : 'Transmitting signal to driver console...',
+                              _isDriverAcknowledged ? 'Driver acknowledged · Ramp ready' : 'Transmitting signal to driver console...',
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 14,
@@ -313,8 +331,8 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                       const SizedBox(height: 6),
                       Text(
                         _isDriverAcknowledged
-                            ? 'Driver R. Kumar (ID: 8821) confirmed ramp deployment at Stop Bay 2.'
-                            : 'Beacon packet broadcast via MQTT / WebSocket to Delhi Transit Dispatch.',
+                            ? 'Driver R. Kumar (DL 1PD 8241) confirmed ramp deployment at stop bay 2.'
+                            : 'Beacon packet transmitted to approaching bus and logged to dispatch queue.',
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 12,
@@ -325,13 +343,30 @@ class _AssistanceScreenState extends State<AssistanceScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+                if (_isDriverAcknowledged)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: YatraColors.navyDeep,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(YatraRadii.button),
+                        ),
+                      ),
+                      onPressed: () => context.go('/tracking'),
+                      icon: const Icon(Icons.directions_bus, size: 18),
+                      label: const Text('Track approaching bus live'),
+                    ),
+                  ),
                 OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      _isRequestSent = false;
-                      _isDriverAcknowledged = false;
-                    });
-                  },
+                  onPressed: _handleCancelRequest,
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(YatraRadii.button),
+                    ),
+                  ),
                   child: const Text('Cancel request'),
                 ),
               ],

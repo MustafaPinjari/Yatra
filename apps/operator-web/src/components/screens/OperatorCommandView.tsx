@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { YatraBrandLogo } from "@/components/brand/YatraBrandLogo";
+import React, { useState } from "react";
 import {
   Activity,
   Radio,
@@ -10,25 +9,45 @@ import {
   CheckCircle2,
   Clock,
   Layers,
+  Bus,
+  Users,
+  Compass,
+  ArrowRight,
+  ExternalLink,
 } from "lucide-react";
+import { YatraBrandLogo } from "@/components/brand/YatraBrandLogo";
+
+interface QueueItem {
+  id: string;
+  route: string;
+  stop: string;
+  priority: "CRITICAL" | "HIGH" | "NORMAL";
+  type: string;
+  bus: string;
+  driver: string;
+  time: string;
+  ack: boolean;
+}
 
 export function OperatorCommandView() {
+  const [activeFilter, setActiveFilter] = useState<"ALL" | "ACKNOWLEDGED" | "PENDING">("ALL");
+
   const kpis = [
-    { label: "Active buses", value: "48", sub: "38 low-floor (79%)", status: "normal" },
-    { label: "Fleet occupancy", value: "62%", sub: "4 buses > 85% load", status: "warning" },
-    { label: "Live handshakes", value: "3", sub: "Avg ack: 18 seconds", status: "normal" },
-    { label: "On-time headway", value: "94.2%", sub: "Target 90% reached", status: "good" },
+    { label: "Active buses", value: "48", sub: "38 low-floor (79%)", trend: "+4 vs morning peak", positive: true },
+    { label: "Fleet occupancy", value: "62%", sub: "4 buses > 85% load", trend: "+3.2% vs baseline", positive: false },
+    { label: "Live handshakes", value: "3", sub: "Avg ack: 18 seconds", trend: "Under 30s target", positive: true },
+    { label: "On-time headway", value: "94.2%", sub: "Target 90% reached", trend: "+4.2% vs target", positive: true },
   ];
 
-  const liveQueue = [
+  const [queue, setQueue] = useState<QueueItem[]>([
     {
       id: "HSH-502-09",
       route: "502",
-      stop: "AIIMS South Gate",
+      stop: "AIIMS South Gate (Bay 04)",
       priority: "CRITICAL",
-      type: "Wheelchair ramp",
+      type: "Wheelchair hydraulic ramp",
       bus: "DL 1PD 4421",
-      driver: "Rajesh (ID: 8821)",
+      driver: "Rajesh Kumar (ID: 8821)",
       time: "1m ago",
       ack: true,
     },
@@ -48,242 +67,327 @@ export function OperatorCommandView() {
       route: "534",
       stop: "Nehru Place Terminal",
       priority: "NORMAL",
-      type: "Elderly extra time",
+      type: "Elderly step-free extra time",
       bus: "DL 1PD 3311",
       driver: "S. Pal (ID: 9012)",
       time: "6m ago",
       ack: true,
     },
-  ];
+  ]);
+
+  const toggleAck = (id: string) => {
+    setQueue((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ack: !item.ack } : item))
+    );
+  };
+
+  const filteredQueue = queue.filter((item) => {
+    if (activeFilter === "ACKNOWLEDGED") return item.ack;
+    if (activeFilter === "PENDING") return !item.ack;
+    return true;
+  });
 
   return (
-    <div className="min-h-[780px] bg-[#0B132B] text-slate-100 flex flex-col md:flex-row rounded-2xl overflow-hidden border-2 border-slate-800 shadow-2xl">
-      {/* 1. Deep Navy Vertical Navigation */}
-      <aside className="w-full md:w-64 bg-[#101B3A] border-b md:border-b-0 md:border-r border-slate-800 p-5 flex flex-col justify-between">
-        <div className="space-y-6">
-          <YatraBrandLogo size="md" variant="light" />
-
-          <div className="pt-2">
-            <span className="text-xs font-semibold text-slate-400">
-              Operations control
-            </span>
-            <nav className="mt-3 space-y-1 text-xs">
-              <a href="#map" className="flex items-center gap-2.5 rounded-lg bg-indigo-600/30 text-indigo-300 font-semibold px-3 py-2 border border-indigo-500/30">
-                <Layers className="h-4 w-4" />
-                <span>Live fleet map</span>
-              </a>
-              <a href="#queue" className="flex items-center gap-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 px-3 py-2 transition-colors">
-                <Radio className="h-4 w-4 text-[#E96835]" />
-                <span>Assistance queue</span>
-                <span className="ml-auto rounded-full bg-[#E96835] text-white text-[10px] font-bold px-1.5">3</span>
-              </a>
-              <a href="#incidents" className="flex items-center gap-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 px-3 py-2 transition-colors">
-                <AlertTriangle className="h-4 w-4 text-amber-400" />
-                <span>Active incidents</span>
-                <span className="ml-auto rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold px-1.5">2</span>
-              </a>
-              <a href="#trust" className="flex items-center gap-2.5 rounded-lg text-slate-300 hover:bg-slate-800/60 px-3 py-2 transition-colors">
-                <ShieldCheck className="h-4 w-4 text-emerald-400" />
-                <span>Trust ledger audits</span>
-              </a>
-            </nav>
-          </div>
-        </div>
-
-        {/* Live Controller Status */}
-        <div className="mt-6 md:mt-0 p-3 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400 space-y-1">
-          <div className="flex items-center gap-1.5 text-emerald-400 font-medium">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            <span>Telemetry online</span>
-          </div>
-          <p>Sector: Delhi South and Central Ring</p>
-          <p className="text-[10px] font-mono text-slate-500">Latency: 142ms (Redis)</p>
-        </div>
-      </aside>
-
-      {/* 2. Main Operations Dashboard */}
-      <main className="flex-1 p-6 space-y-6 flex flex-col justify-between">
-        {/* Top Header & Live KPI Strip */}
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <span className="text-xs font-semibold text-indigo-400">
-                Central dispatch
-              </span>
-              <h1 className="font-editorial-serif text-2xl sm:text-3xl font-bold text-white">
-                Network Operations Centre
-              </h1>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-3 py-1 text-xs font-medium flex items-center gap-1.5">
-                <Activity className="h-3.5 w-3.5" /> Normal fleet headway
-              </span>
-            </div>
-          </div>
-
-          {/* KPI Strip */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-            {kpis.map((kpi) => (
-              <div
-                key={kpi.label}
-                className="rounded-xl border border-slate-800 bg-slate-900/60 p-3.5 space-y-1 shadow-sm"
-              >
-                <p className="text-[11px] text-slate-400">{kpi.label}</p>
-                <p className="font-editorial-serif text-2xl font-bold text-white tabular-nums">{kpi.value}</p>
-                <p className="text-[10px] text-slate-400">{kpi.sub}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Real-time Choke Point Banner (Problem 5) */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300">
-            <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-              <span className="font-semibold text-white">Route 502 segment load bottleneck</span>
-              <span className="text-slate-400">· Red Fort to Delhi Gate at 96% capacity (58 / 60)</span>
-            </div>
-            <span className="text-[10px] font-mono text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800/60">
-              Relief bus recommended
-            </span>
-          </div>
-        </div>
-
-        {/* 3. Dark Cartographic Operations Map Simulation (`YATRA-ILL-009`) */}
-        <div className="relative h-[280px] sm:h-[320px] rounded-yatra-card border border-slate-800 bg-[#070D1E] overflow-hidden">
-          {/* Real Cartographic Map Texture Underlay */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/illustrations/delhi-dark-map-texture.png"
-            alt="Delhi Dark Transit Network Cartographic Base"
-            className="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-screen pointer-events-none"
-          />
-          <svg
-            viewBox="0 0 800 360"
-            className="relative z-10 w-full h-full object-cover"
-            xmlns="http://www.w3.org/2000/svg"
+    <div className="space-y-6">
+      {/* 1. Metric Cards Strip */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpis.map((kpi) => (
+          <div
+            key={kpi.label}
+            className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial transition-all hover:shadow-editorial-lg"
           >
-            {/* Dark Delhi Transit Grid Lines */}
-            <g stroke="#1A2744" strokeWidth="1">
-              <line x1="0" y1="60" x2="800" y2="60" />
-              <line x1="0" y1="140" x2="800" y2="140" />
-              <line x1="0" y1="220" x2="800" y2="220" />
-              <line x1="0" y1="300" x2="800" y2="300" />
-              <line x1="120" y1="0" x2="120" y2="360" />
-              <line x1="280" y1="0" x2="280" y2="360" />
-              <line x1="440" y1="0" x2="440" y2="360" />
-              <line x1="600" y1="0" x2="600" y2="360" />
-              <line x1="720" y1="0" x2="720" y2="360" />
-            </g>
-
-            {/* Glowing Ring Road Arterial Loop */}
-            <ellipse
-              cx="400"
-              cy="180"
-              rx="280"
-              ry="110"
-              stroke="#0284C7"
-              strokeWidth="4"
-              strokeDasharray="8 4"
-              fill="none"
-              opacity="0.8"
-            />
-            {/* Route 502 Radial Spur Line */}
-            <line x1="220" y1="60" x2="520" y2="290" stroke="#38BDF8" strokeWidth="5" strokeLinecap="round" />
-
-            {/* Live Bus Beacon 1 (Route 502) */}
-            <g transform="translate(420, 210)">
-              <circle cx="0" cy="0" r="16" fill="#38BDF8" opacity="0.3" className="animate-ping" />
-              <circle cx="0" cy="0" r="7" fill="#38BDF8" stroke="#FFFFFF" strokeWidth="2" />
-              <text x="12" y="4" fill="#38BDF8" fontSize="11" fontWeight="bold">502 (AIIMS)</text>
-            </g>
-
-            {/* Live Bus Beacon 2 (TMS) */}
-            <g transform="translate(620, 160)">
-              <circle cx="0" cy="0" r="14" fill="#10B981" opacity="0.3" className="animate-ping" />
-              <circle cx="0" cy="0" r="6" fill="#10B981" stroke="#FFFFFF" strokeWidth="2" />
-              <text x="12" y="4" fill="#10B981" fontSize="11" fontWeight="bold">TMS (Wazirpur)</text>
-            </g>
-
-            {/* Critical Assistance Geo-Pin at AIIMS */}
-            <g transform="translate(425, 225)">
-              <circle cx="0" cy="0" r="9" fill="#E96835" />
-              <path d="M-4 -4 L4 4 M4 -4 L-4 4" stroke="#FFFFFF" strokeWidth="1.5" />
-            </g>
-          </svg>
-
-          {/* Map Overlay Badge */}
-          <div className="absolute top-3 left-3 bg-[#101B3A]/90 border border-slate-700 rounded-lg p-2 text-[10px] space-y-0.5 backdrop-blur-xs font-mono">
-            <p className="text-indigo-300 font-bold">GIS Projection: WGS 84 (EPSG:4326)</p>
-            <p className="text-slate-400">PostGIS Spatial Geofence: 500m Active</p>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-[#64748B]">{kpi.label}</span>
+              <span
+                className={`text-[11px] font-semibold tabular-nums px-2 py-0.5 rounded-full ${
+                  kpi.positive
+                    ? "bg-[#E4F1E5] text-[#16764C]"
+                    : "bg-[#FEF3C7] text-[#D97706]"
+                }`}
+              >
+                {kpi.trend}
+              </span>
+            </div>
+            <div className="mt-3">
+              <span className="font-editorial-serif text-3xl font-extrabold text-[#101B3A] tabular-nums">
+                {kpi.value}
+              </span>
+            </div>
+            <p className="mt-1 text-xs text-[#64748B]">{kpi.sub}</p>
           </div>
-        </div>
+        ))}
+      </div>
 
-        {/* 4. Priority Assistance Queue Table */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xs font-semibold text-slate-300">
-              Live assistance handshake queue
-            </h2>
-            <span className="text-[11px] text-slate-400 font-mono">Real-time WebSocket stream</span>
-          </div>
+      {/* 2. Main Two-Column Command Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left 2 Columns: Live Handshake Queue & Corridor Monitor */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Active Handshakes Card */}
+          <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-6 shadow-editorial">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#E6DDD0]">
+              <div>
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-[#E96835]/12 text-[#E96835]">
+                    <Radio className="h-4 w-4" />
+                  </div>
+                  <h2 className="font-editorial-serif text-xl font-bold text-[#101B3A]">
+                    Live boarding assistance queue
+                  </h2>
+                </div>
+                <p className="text-xs text-[#64748B] mt-1">
+                  AccessHandshake signals dispatched to approaching low-floor bus drivers
+                </p>
+              </div>
 
-          <div className="rounded-xl border border-slate-800 bg-slate-900/70 overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="border-b border-slate-800 bg-slate-900/90 text-[10px] font-semibold text-slate-400">
-                <tr>
-                  <th className="px-3.5 py-2.5">Priority</th>
-                  <th className="px-3.5 py-2.5">Route and stop</th>
-                  <th className="px-3.5 py-2.5">Assistance type</th>
-                  <th className="px-3.5 py-2.5">Bus and driver</th>
-                  <th className="px-3.5 py-2.5">Status</th>
-                  <th className="px-3.5 py-2.5 text-right">Elapsed</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono">
-                {liveQueue.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="px-3.5 py-2">
+              {/* Filter Pills */}
+              <div className="flex items-center gap-1.5 bg-[#F7F2E9] p-1 rounded-xl border border-[#E6DDD0] text-xs">
+                <button
+                  onClick={() => setActiveFilter("ALL")}
+                  className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
+                    activeFilter === "ALL"
+                      ? "bg-[#101B3A] text-white font-semibold"
+                      : "text-[#64748B] hover:text-[#101B3A]"
+                  }`}
+                >
+                  All ({queue.length})
+                </button>
+                <button
+                  onClick={() => setActiveFilter("PENDING")}
+                  className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
+                    activeFilter === "PENDING"
+                      ? "bg-[#E96835] text-white font-semibold"
+                      : "text-[#64748B] hover:text-[#101B3A]"
+                  }`}
+                >
+                  Pending ({queue.filter((q) => !q.ack).length})
+                </button>
+                <button
+                  onClick={() => setActiveFilter("ACKNOWLEDGED")}
+                  className={`px-2.5 py-1 rounded-lg font-medium transition-colors cursor-pointer ${
+                    activeFilter === "ACKNOWLEDGED"
+                      ? "bg-[#16764C] text-white font-semibold"
+                      : "text-[#64748B] hover:text-[#101B3A]"
+                  }`}
+                >
+                  Acknowledged ({queue.filter((q) => q.ack).length})
+                </button>
+              </div>
+            </div>
+
+            {/* Queue Items List */}
+            <div className="mt-4 space-y-3">
+              {filteredQueue.map((item) => (
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-[#E6DDD0] bg-[#FFFFFF] p-4 transition-all hover:border-[#D4A373] shadow-xs"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-[#F7F2E9] text-[#101B3A] border border-[#E6DDD0]">
+                        {item.id}
+                      </span>
+                      <span className="font-mono text-xs font-extrabold px-2 py-0.5 rounded-md bg-[#E96835]/15 text-[#E96835]">
+                        Route {item.route}
+                      </span>
                       <span
-                        className={`rounded px-1.5 py-0.5 text-[9px] font-bold ${
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                           item.priority === "CRITICAL"
-                            ? "bg-rose-500/20 text-rose-300 border border-rose-500/40"
+                            ? "bg-[#FEE2E2] text-[#DC2626]"
                             : item.priority === "HIGH"
-                            ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                            : "bg-slate-700 text-slate-300"
+                            ? "bg-[#FEF3C7] text-[#D97706]"
+                            : "bg-[#E4F1E5] text-[#16764C]"
                         }`}
                       >
                         {item.priority}
                       </span>
-                    </td>
-                    <td className="px-3.5 py-2 font-sans font-semibold text-white">
-                      {item.route} · {item.stop}
-                    </td>
-                    <td className="px-3.5 py-2 font-sans text-slate-300">
-                      {item.type}
-                    </td>
-                    <td className="px-3.5 py-2 text-slate-400">
-                      {item.bus} ({item.driver})
-                    </td>
-                    <td className="px-3.5 py-2">
-                      {item.ack ? (
-                        <span className="text-emerald-400 flex items-center gap-1 font-semibold">
-                          <CheckCircle2 className="h-3.5 w-3.5" /> Acked
-                        </span>
-                      ) : (
-                        <span className="text-amber-400 flex items-center gap-1 font-semibold animate-pulse">
-                          <Clock className="h-3.5 w-3.5" /> Paging Driver
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-3.5 py-2 text-right text-slate-500 font-sans">{item.time}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                    <span className="text-xs text-[#64748B] flex items-center gap-1 tabular-nums">
+                      <Clock className="h-3 w-3" /> {item.time}
+                    </span>
+                  </div>
+
+                  <div className="mt-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                      <p className="text-sm font-semibold text-[#101B3A]">{item.stop}</p>
+                      <p className="text-xs text-[#64748B] mt-0.5">
+                        Assistance: <span className="font-medium text-[#334155]">{item.type}</span> · Bus {item.bus} ({item.driver})
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => toggleAck(item.id)}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
+                          item.ack
+                            ? "bg-[#E4F1E5] text-[#16764C] border border-[#16764C]/30 hover:bg-[#16764C]/15"
+                            : "bg-[#E96835] text-white hover:bg-[#d05726]"
+                        }`}
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                        <span>{item.ack ? "Driver confirmed" : "Acknowledge"}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Active Corridor Telemetry Monitor */}
+          <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-6 shadow-editorial">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E6DDD0]">
+              <div className="flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-[#16764C]/12 text-[#16764C]">
+                  <Compass className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="font-editorial-serif text-lg font-bold text-[#101B3A]">
+                    Key corridor operations and headway
+                  </h3>
+                  <p className="text-xs text-[#64748B]">
+                    Real-time headway stability along high-density accessibility trunk lines
+                  </p>
+                </div>
+              </div>
+              <span className="text-xs font-semibold text-[#16764C] bg-[#E4F1E5] px-2.5 py-1 rounded-full border border-[#16764C]/20">
+                GTFS-RT operational
+              </span>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E6DDD0]">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#101B3A]">Route 502</span>
+                  <span className="text-[10px] font-semibold text-[#16764C] bg-[#E4F1E5] px-2 py-0.5 rounded-full">
+                    On schedule
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#64748B] mt-1">Kashmere Gate ⟷ Mehrauli</p>
+                <div className="mt-3 flex items-baseline justify-between text-xs">
+                  <span className="text-[#64748B]">Headway gap</span>
+                  <span className="font-bold text-[#101B3A] tabular-nums">7.8 min (Target 8.0)</span>
+                </div>
+                <div className="mt-1 flex items-baseline justify-between text-xs">
+                  <span className="text-[#64748B]">Low-floor ratio</span>
+                  <span className="font-bold text-[#16764C] tabular-nums">14 / 18 buses (78%)</span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E6DDD0]">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#101B3A]">TMS(+) Mudrika</span>
+                  <span className="text-[10px] font-semibold text-[#D97706] bg-[#FEF3C7] px-2 py-0.5 rounded-full">
+                    Minor bunching
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#64748B] mt-1">Ring Road Clockwise Loop</p>
+                <div className="mt-3 flex items-baseline justify-between text-xs">
+                  <span className="text-[#64748B]">Headway gap</span>
+                  <span className="font-bold text-[#101B3A] tabular-nums">5.2 min (Target 5.0)</span>
+                </div>
+                <div className="mt-1 flex items-baseline justify-between text-xs">
+                  <span className="text-[#64748B]">Low-floor ratio</span>
+                  <span className="font-bold text-[#16764C] tabular-nums">28 / 32 buses (88%)</span>
+                </div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#FFFFFF] border border-[#E6DDD0]">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-[#101B3A]">Route 534</span>
+                  <span className="text-[10px] font-semibold text-[#16764C] bg-[#E4F1E5] px-2 py-0.5 rounded-full">
+                    On schedule
+                  </span>
+                </div>
+                <p className="text-[11px] text-[#64748B] mt-1">Anand Vihar ⟷ Mehrauli</p>
+                <div className="mt-3 flex items-baseline justify-between text-xs">
+                  <span className="text-[#64748B]">Headway gap</span>
+                  <span className="font-bold text-[#101B3A] tabular-nums">11.4 min (Target 12.0)</span>
+                </div>
+                <div className="mt-1 flex items-baseline justify-between text-xs">
+                  <span className="text-[#64748B]">Low-floor ratio</span>
+                  <span className="font-bold text-[#16764C] tabular-nums">8 / 12 buses (67%)</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </main>
+
+        {/* Right 1 Column: Depot Quick Actions & Cryptographic Proof */}
+        <div className="space-y-6">
+          {/* Quick Dispatch Controls */}
+          <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial">
+            <h3 className="font-editorial-serif text-base font-bold text-[#101B3A]">
+              Depot operational actions
+            </h3>
+            <p className="text-xs text-[#64748B] mt-1">
+              Direct dispatch protocols for Delhi Transport Corporation sector controllers
+            </p>
+
+            <div className="mt-4 space-y-2.5">
+              <button
+                type="button"
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#FFFFFF] border border-[#E6DDD0] text-xs font-semibold text-[#101B3A] hover:border-[#D4A373] hover:bg-[#F7F2E9] transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Bus className="h-4 w-4 text-[#E96835]" />
+                  <span>Dispatch relief low-floor bus</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-[#64748B]" />
+              </button>
+
+              <button
+                type="button"
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#FFFFFF] border border-[#E6DDD0] text-xs font-semibold text-[#101B3A] hover:border-[#D4A373] hover:bg-[#F7F2E9] transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <AlertTriangle className="h-4 w-4 text-[#D97706]" />
+                  <span>Issue ramp obstruction ticket</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-[#64748B]" />
+              </button>
+
+              <button
+                type="button"
+                className="w-full flex items-center justify-between p-3 rounded-xl bg-[#FFFFFF] border border-[#E6DDD0] text-xs font-semibold text-[#101B3A] hover:border-[#D4A373] hover:bg-[#F7F2E9] transition-colors cursor-pointer"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Activity className="h-4 w-4 text-[#16764C]" />
+                  <span>Broadcast headway balancing</span>
+                </div>
+                <ArrowRight className="h-3.5 w-3.5 text-[#64748B]" />
+              </button>
+            </div>
+          </div>
+
+          {/* Cryptographic Trust Ledger Summary */}
+          <div className="rounded-2xl border border-[#E6DDD0] bg-[#FFFCF7] p-5 shadow-editorial">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E6DDD0]">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-[#16764C]" />
+                <h4 className="font-editorial-serif text-sm font-bold text-[#101B3A]">
+                  Trust ledger attestation
+                </h4>
+              </div>
+              <span className="text-[10px] font-semibold text-[#16764C] bg-[#E4F1E5] px-2 py-0.5 rounded-full">
+                Sepolia verified
+              </span>
+            </div>
+
+            <p className="text-xs text-[#64748B] mt-2.5 leading-relaxed">
+              Every resolved ramp assistance request and depot maintenance inspection is hashed and anchored with zero passenger PII on-chain.
+            </p>
+
+            <div className="mt-3 p-2.5 rounded-lg bg-[#F7F2E9] border border-[#E6DDD0] font-mono text-[10px] text-[#334155] break-all">
+              Contract: 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+            </div>
+
+            <div className="mt-3 pt-3 border-t border-[#E6DDD0] flex items-center justify-between text-xs text-[#64748B]">
+              <span>Last anchor receipt</span>
+              <span className="font-semibold text-[#101B3A] tabular-nums">2m ago · Block #7192811</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
