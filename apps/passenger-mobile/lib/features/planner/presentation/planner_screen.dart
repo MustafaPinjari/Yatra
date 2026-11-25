@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/api/api_config.dart';
 import '../../../core/theme/yatra_colors.dart';
 import '../../../core/theme/yatra_typography.dart';
 import '../../../core/theme/yatra_radii.dart';
@@ -155,9 +157,19 @@ class _JourneyPlannerScreenState extends State<JourneyPlannerScreen> {
       }
     } catch (e) {
       if (mounted) {
+        String detail = 'Could not compute transit routes. Please retry.';
+        if (e is DioException) {
+          if (e.type == DioExceptionType.connectionTimeout || e.type == DioExceptionType.receiveTimeout) {
+            detail = 'Connection timed out. Verify backend is running at ${ApiConfig.baseUrl}.';
+          } else if (e.response != null) {
+            detail = 'Backend returned HTTP ${e.response?.statusCode}. Please retry.';
+          } else {
+            detail = 'Cannot connect to API at ${ApiConfig.baseUrl}. Verify backend service is active.';
+          }
+        }
         setState(() {
           _isSearching = false;
-          _errorMessage = 'Could not compute transit routes. Verify API service is reachable.';
+          _errorMessage = detail;
         });
       }
     }

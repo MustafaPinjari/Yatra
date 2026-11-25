@@ -12,10 +12,10 @@ echo ============================================================
 echo.
 
 echo [1/2] Launching Backend on port 8000...
-start "YATRA Backend (:8000)" cmd /c ""%REPO_ROOT%run_backend.bat""
+start "YATRA Backend (:8000)" cmd /k ""%REPO_ROOT%run_backend.bat""
 
 echo [2/2] Launching Operator Web on port 3000...
-start "YATRA Operator Web (:3000)" cmd /c ""%REPO_ROOT%run_operator_web.bat""
+start "YATRA Operator Web (:3000)" cmd /k ""%REPO_ROOT%run_operator_web.bat""
 
 echo.
 echo Waiting for services to initialize...

@@ -23,7 +23,10 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "*",
     ]
+    CORS_ORIGIN_REGEX: str = r"^https?://.*"
 
     # Database & Cache
     DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/yatra_dev"

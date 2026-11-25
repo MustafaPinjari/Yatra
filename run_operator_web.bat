@@ -6,7 +6,7 @@ set REPO_ROOT=%~dp0
 cd /d "%REPO_ROOT%apps\operator-web"
 
 echo ============================================================
-echo   YATRA -- Operator Web & Delhi Government Intelligence
+echo   YATRA -- Operator Web and Delhi Government Intelligence
 echo ============================================================
 echo   URL:  http://localhost:3000
 echo ============================================================
@@ -19,5 +19,8 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-npm run dev
+call npm.cmd run dev
+if %errorlevel% neq 0 (
+    call npm run dev
+)
 pause

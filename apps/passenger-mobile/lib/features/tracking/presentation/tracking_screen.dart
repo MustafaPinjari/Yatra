@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/api/api_config.dart';
 import '../../../core/theme/yatra_colors.dart';
 import '../../../core/theme/yatra_typography.dart';
 import '../../../core/theme/yatra_radii.dart';
@@ -83,9 +85,19 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
       }
     } catch (e) {
       if (mounted) {
+        String detail = 'Live tracking unavailable. Please verify API connection.';
+        if (e is DioException) {
+          if (e.type == DioExceptionType.connectionTimeout || e.type == DioExceptionType.receiveTimeout) {
+            detail = 'Telemetry connection timed out (${ApiConfig.baseUrl}).';
+          } else if (e.response != null) {
+            detail = 'Telemetry service returned HTTP ${e.response?.statusCode}.';
+          } else {
+            detail = 'Cannot connect to telemetry service at ${ApiConfig.baseUrl}.';
+          }
+        }
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Live tracking unavailable. Please verify API connection.';
+          _errorMessage = detail;
         });
       }
     }

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'api_config.dart';
 
 class ApiClient {
@@ -19,6 +20,17 @@ class ApiClient {
         },
       ),
     );
+
+    if (kDebugMode) {
+      dio.interceptors.add(
+        InterceptorsWrapper(
+          onError: (DioException e, handler) {
+            debugPrint('[ApiClient] ${e.requestOptions.method} ${e.requestOptions.path} failed: ${e.type} (HTTP ${e.response?.statusCode ?? "no response"})');
+            return handler.next(e);
+          },
+        ),
+      );
+    }
   }
 
   Future<Response<T>> get<T>(

@@ -6,7 +6,7 @@ set REPO_ROOT=%~dp0
 cd /d "%REPO_ROOT%services\api"
 
 echo ============================================================
-echo   YATRA -- FastAPI Analytics & Transit Intelligence Backend
+echo   YATRA -- FastAPI Analytics and Transit Intelligence Backend
 echo ============================================================
 echo   Endpoint:  http://localhost:8000
 echo   API Docs:  http://localhost:8000/docs
